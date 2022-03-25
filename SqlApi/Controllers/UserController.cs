@@ -5,19 +5,20 @@ using System.Data;
 using System.Data.SqlClient;
 namespace SqlApi.Controllers
 {
-    [Route("api/[controller]")]
+    
     [ApiController]
-    public class PersonController : ControllerBase
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        public PersonController(IConfiguration configuration) { 
+        public UserController(IConfiguration configuration) { 
             _configuration = configuration; 
         }
 
         [HttpGet]
         public JsonResult Get()
         {
-            string query = @"Select * From Persons";
+            string query = @"Select * From TBL_NOVA_USERDATA";
             DataTable table= new DataTable();
             string sqldataSource = _configuration.GetConnectionString("con");
             SqlDataReader sqlreader;
