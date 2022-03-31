@@ -13,6 +13,7 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "launchUrl": "api/user",
+      "applicationUrl": "http://192.168.2.180:1433",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -21,10 +22,10 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/user",
+      "applicationUrl": "http://192.168.2.180:1433",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://192.168.2.180:1433"
+      }
     }
   }
 }
