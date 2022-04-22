@@ -10,14 +10,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
+using SqlApi.Models;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace SqlApi
 {
     public class Startup
     {
+        public string ConnectionString { get; set; }
+        public string ConnectionStringStok { get; set; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            ConnectionString = Configuration.GetConnectionString("Connn");
+            ConnectionStringStok = Configuration.GetConnectionString("Conn");
         }
 
         public IConfiguration Configuration { get; }
@@ -26,6 +33,9 @@ namespace SqlApi
         public void ConfigureServices(IServiceCollection services)
 
         {
+            services.AddDbContext<StokContext>(options => options.UseSqlServer(ConnectionStringStok));
+            services.AddDbContext<UserRoleContext>(options => options.UseSqlServer(ConnectionString));
+            services.AddDbContext<UserContext>(options => options.UseSqlServer(ConnectionString));
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

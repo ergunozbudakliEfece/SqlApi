@@ -4,7 +4,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://192.168.2.180:1433",
+      "applicationUrl": "http://192.168.2.209:82",
       "sslPort": 0
     }
   },
@@ -13,7 +13,7 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "launchUrl": "api/user",
-      "applicationUrl": "http://192.168.2.180:1433",
+      "applicationUrl": "http://192.168.2.209:82",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -22,7 +22,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/user",
-      "applicationUrl": "http://192.168.2.180:1433",
+      "applicationUrl": "http://192.168.2.209:82",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

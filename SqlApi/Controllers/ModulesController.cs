@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace SqlApi.Controllers
 {
-    [Produces("application/json")]
     [Route("api/[controller]")]
-    public class UserController : Controller
+    [ApiController]
+    public class ModulesController : ControllerBase
     {
         private readonly UserContext _context;
 
-        public UserController(UserContext context)
+        public ModulesController(UserContext context)
         {
             _context = context;
         }
@@ -20,23 +20,23 @@ namespace SqlApi.Controllers
         [HttpGet]
         public IEnumerable GetAll()
         {
-            return _context.TBL_USER_DATA.ToList();
+            return _context.TBL_MODULES.ToList();
         }
 
-        [HttpGet("{id:int}",Name = "GetUserById")]
+        [HttpGet("{id:int}", Name = "GetModulesById")]
         public IActionResult GetById(int id)
         {
-            var item = _context.TBL_USER_DATA.FirstOrDefault(t => t.USER_ID == id);
+            var item = _context.TBL_MODULES.FirstOrDefault(t => t.INCKEY == id);
             if (item == null)
             {
                 return NotFound();
             }
             return new ObjectResult(item);
         }
-        [HttpGet("{name}", Name = "GetUserByName")]
+        [HttpGet("{name}", Name = "GetModuleByName")]
         public IActionResult GetByName(string name)
         {
-            var item = _context.TBL_USER_DATA.FirstOrDefault(t => t.USER_NAME == name);
+            var item = _context.TBL_MODULES.FirstOrDefault(t => t.MODULE_NAME == name);
             if (item == null)
             {
                 return NotFound();
@@ -44,41 +44,37 @@ namespace SqlApi.Controllers
             return new ObjectResult(item);
         }
         [HttpPost]
-        public IActionResult Create([FromBody] User item)
+        public IActionResult Create([FromBody] Module item)
         {
             if (item == null)
             {
                 return BadRequest();
             }
 
-            _context.TBL_USER_DATA.Add(item);
+            _context.TBL_MODULES.Add(item);
             _context.SaveChanges();
 
-            return CreatedAtRoute("GetUserByName", new { name = item.USER_NAME }, item);
+            return CreatedAtRoute("GetModuleByName", new { name = item.MODULE_NAME }, item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] User item)
+        public IActionResult Update(int id, [FromBody] Module item)
         {
-            if (item == null || item.USER_ID != id)
+            if (item == null || item.INCKEY != id)
             {
                 return BadRequest();
             }
 
-            var user = _context.TBL_USER_DATA.FirstOrDefault(t => t.USER_ID == id);
-            if (user == null)
+            var module = _context.TBL_MODULES.FirstOrDefault(t => t.INCKEY == id);
+            if (module == null)
             {
                 return NotFound();
             }
-
-            user.USER_NAME = item.USER_NAME;
-            user.USER_PASSWORD = item.USER_PASSWORD;
-            user.USER_ROLE = item.USER_ROLE;
-            user.ACTIVE = item.ACTIVE;
-            user.USER_MAIL = item.USER_MAIL;
-            
-
-            _context.TBL_USER_DATA.Update(user);
+            module.MODULE_ID = item.MODULE_ID;
+            module.MODULE_NAME = item.MODULE_NAME;
+            module.PROGRAM_ID = item.PROGRAM_ID;
+            module.PROGRAM_NAME = item.PROGRAM_NAME;
+            _context.TBL_MODULES.Update(module);
             _context.SaveChanges();
             return new NoContentResult();
         }

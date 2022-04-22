@@ -1,14 +1,20 @@
-﻿namespace SqlApi.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SqlApi.Models
 {
     public class User
     {
-        public string UserID { get; set; }
-        public string UserName { get; set; }
-        public string UserPassword { get; set; }
-        public string UserFirstName { get; set; }
-        public string UserLastName { get; set; }
-        public string UserRole { get; set; }
-        public bool Aktif { get; set; }
-        public string UserMail { get; set; }
+        [Key]
+        public int USER_ID { get; set; }
+        public string USER_NAME { get; set; } = null!;
+        public string USER_PASSWORD { get; set; } = null!;
+        public string USER_FIRSTNAME { get; set; } = null!;
+        public string USER_LASTNAME { get; set; } = null!;
+        public bool ACTIVE { get; set; } 
+        public string USER_ROLE { get; set; } 
+        public string USER_MAIL { get; set; } = null!;
+
+
+
     }
 }
