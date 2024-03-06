@@ -23,8 +23,8 @@ namespace SqlApi.Controllers
             return _context.TBL_USER_AUTH.ToList();
         }
 
-        [HttpGet("{id:long}", Name = "GetUserRoles")]
-        public IActionResult GetById(long id)
+        [HttpGet("{id}", Name = "GetUserRoles")]
+        public IActionResult GetById(int id)
         {
             var item = _context.TBL_USER_AUTH.FirstOrDefault(t => t.USER_ID == id);
             if (item == null)
@@ -70,7 +70,7 @@ namespace SqlApi.Controllers
             userrole.UPDATE_AUTH = item.UPDATE_AUTH;
             userrole.DELETE_AUTH = item.DELETE_AUTH;
             userrole.LOG_USER_ID = item.LOG_USER_ID;
-            userrole.LOG_DATE = item.LOG_DATE;
+            userrole.ACTIVITY_START = item.ACTIVITY_START;
             userrole.LAST_UPD_USER_ID = item.LAST_UPD_USER_ID;
             userrole.LAST_UPD_DATE = item.LAST_UPD_DATE;
 

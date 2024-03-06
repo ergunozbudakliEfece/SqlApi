@@ -6,7 +6,6 @@ using System.Linq;
 
 namespace SqlApi.Controllers
 {
-    [Produces("application/json")]
     [Route("api/[controller]")]
     public class RolesController : Controller
     {

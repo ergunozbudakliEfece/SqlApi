@@ -50,7 +50,7 @@ namespace SqlApi.Controllers
             {
                 return BadRequest();
             }
-
+            item.ACTIVE = "0";
             _context.TBL_MODULES.Add(item);
             _context.SaveChanges();
 
@@ -78,5 +78,47 @@ namespace SqlApi.Controllers
             _context.SaveChanges();
             return new NoContentResult();
         }
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id, [FromBody] Module item)
+        {
+            if (item == null || item.INCKEY != id)
+            {
+                return BadRequest();
+            }
+
+            var module = _context.TBL_MODULES.FirstOrDefault(t => t.INCKEY == id);
+            if (module == null)
+            {
+                return NotFound();
+            }
+            module.MODULE_ID = item.MODULE_ID;
+            module.MODULE_NAME = item.MODULE_NAME;
+            module.PROGRAM_ID = item.PROGRAM_ID;
+            module.PROGRAM_NAME = item.PROGRAM_NAME;
+            _context.TBL_MODULES.Remove(module);
+            _context.SaveChanges();
+            return new NoContentResult();
+        }
+        [HttpPut("active")]
+        public IActionResult UpdateActive([FromBody] ModuleActive item)
+        {
+           
+
+            var module = _context.TBL_MODULES.FirstOrDefault(t => t.INCKEY == item.INCKEY);
+            if (module == null)
+            {
+                return NotFound();
+            }
+            module.ACTIVE = item.ACTIVE;
+            _context.TBL_MODULES.Update(module);
+            _context.SaveChanges();
+            return new NoContentResult();
+        }
+        public class ModuleActive
+        {
+            public int INCKEY { set; get; }
+            public string ACTIVE { set; get; }
+        }
+
     }
 }

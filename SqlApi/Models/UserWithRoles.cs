@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SqlApi.Models
 {
-    [Keyless]
     public class UserWithRoles
     {
         [Key, Column(Order = 0)]

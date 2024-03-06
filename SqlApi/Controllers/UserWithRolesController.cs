@@ -8,6 +8,7 @@ namespace SqlApi.Controllers
 {
     
     [ApiController]
+    [Route("api/[controller]")]
     public class UserWithRolesController : Controller
     {
         private readonly UserContext _context;
@@ -16,13 +17,13 @@ namespace SqlApi.Controllers
         {
             _context = context;
         }
-        [Route("api/[controller]")]
+        
         [HttpGet]
         public IEnumerable GetAll()
         {
             return _context.VW_USER_WITH_ROLES.ToList();
         }
-        [Route("api/[controller]/{id}")]
+        
         [HttpGet("{id:int}", Name = "GetUserwithRolesById")]
         public IActionResult GetById(int id)
         {
@@ -33,8 +34,8 @@ namespace SqlApi.Controllers
             }
             return new ObjectResult(item);
         }
-        [Route("api/[controller]/{id}/{inckey}")]
-        [HttpGet]
+        
+        [HttpGet("{id}/{inckey}", Name = "GetUserwithRolesByIncandId")]
         public IActionResult GetByIdandINC(int id,int inckey)
         {
             var item = _context.VW_USER_WITH_ROLES.Where(t => t.USER_ID == id && t.MODULE_INCKEY==inckey);
@@ -44,8 +45,8 @@ namespace SqlApi.Controllers
             }
             return new ObjectResult(item);
         }
-        [Route("api/[controller]/inc:{inckey}")]
-        [HttpGet]
+        
+        [HttpGet("inc:{inckey}", Name = "GetUserwithRolesByInc")]
         public IActionResult GetByINC(int inckey)
         {
             var item = _context.VW_USER_WITH_ROLES.Where(t => t.MODULE_INCKEY == inckey);
@@ -55,7 +56,8 @@ namespace SqlApi.Controllers
             }
             return new ObjectResult(item);
         }
-        [Route("api/[controller]/name:{name}")]
+        
+        [HttpGet("name:{name}", Name = "GetUserwithRolesByName")]
         public IActionResult GetByName(string name)
         {
             var item = _context.VW_USER_WITH_ROLES.Where(t => t.USER_NAME == name);
@@ -66,8 +68,8 @@ namespace SqlApi.Controllers
             return new ObjectResult(item);
         }
 
-        [Route("api/[controller]/{id}/{inckey}")]
-        [HttpPut]
+        
+        [HttpPut("{id}/{inckey}")]
         public IActionResult Update(int id,int inckey, [FromBody] UserWithRoles item)
         {
             if (item == null || item.USER_ID != id)
@@ -75,7 +77,7 @@ namespace SqlApi.Controllers
                 return BadRequest();
             }
 
-            var user = _context.VW_USER_WITH_ROLES.SingleOrDefault((t) =>  t.USER_ID == id && t.MODULE_INCKEY == inckey );
+            var user = _context.VW_USER_WITH_ROLES.FirstOrDefault((t) =>  t.USER_ID == id && t.MODULE_INCKEY == inckey );
             if (user == null)
             {
                 return NotFound();

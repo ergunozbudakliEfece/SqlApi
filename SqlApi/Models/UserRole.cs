@@ -31,7 +31,7 @@ namespace SqlApi.Models
 
         public int LOG_USER_ID { get; set; }
 
-        public DateTime LOG_DATE { get; set; }
+        public DateTime ACTIVITY_START { get; set; }
 
         public int LAST_UPD_USER_ID { get; set; }
 
