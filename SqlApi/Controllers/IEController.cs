@@ -75,6 +75,30 @@ namespace SqlApi.Controllers
 
             return new JsonResult(table);
         }
+        [HttpGet("USKDL/{makkodu}/{seri}")]
+        public JsonResult USKDL(string makkodu, string seri)
+        {
+
+            DataTable table = new DataTable();
+            string query = @"SP_URETIM_" + makkodu.Substring(0, 2) + " '" + makkodu + "','" + seri + "'";
+
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
         [HttpGet("hatgirdi/{s}")]
         public JsonResult GETHat(string s)
         {

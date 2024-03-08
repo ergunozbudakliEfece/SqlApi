@@ -57,6 +57,26 @@ namespace SqlApi.Controllers
             }
             return new JsonResult(table);
         }
+        [HttpGet("diagram/{stok}")]
+        public JsonResult GetDiagram(string stok)
+        {
+            DataTable table = new DataTable();
+            string query = @"EXEC SP_SERI_DIAGRAM '" + stok + "'";
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
         [HttpGet("anlik")]
         public JsonResult GetAnlik()
         {
