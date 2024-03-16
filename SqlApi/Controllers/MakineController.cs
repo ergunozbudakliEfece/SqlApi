@@ -77,6 +77,30 @@ namespace SqlApi.Controllers
             }
             return new JsonResult(table);
         }
+
+        [HttpGet("mes/sub")]
+        public JsonResult GetMesSub()
+        {
+            DataTable table = new DataTable();
+
+
+            string query = @"EXEC SP_MES_SUB";
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
         [HttpGet("uretim/{id}")]
         public JsonResult GetMakinelerUretimTipi(int id)
         {

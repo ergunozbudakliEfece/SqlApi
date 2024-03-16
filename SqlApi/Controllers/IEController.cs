@@ -49,6 +49,32 @@ namespace SqlApi.Controllers
 
             return new JsonResult(table);
         }
+        [HttpGet("TOPDL/{makinekodu}")]
+        public JsonResult GETIEDLTOP(string makinekodu)
+        {
+
+
+            DataTable table = new DataTable();
+
+
+            string query = "EXEC SP_HAT_GIRDI_IE_" + makinekodu.Substring(0, 2) + "2 '" + makinekodu + "'";
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
         [HttpGet("acikisemirleri")]
         public JsonResult GETACIKLAR(string makinekodu)
         {
@@ -75,12 +101,12 @@ namespace SqlApi.Controllers
 
             return new JsonResult(table);
         }
-        [HttpGet("USKDL/{makkodu}/{seri}")]
-        public JsonResult USKDL(string makkodu, string seri)
+        [HttpGet("USKDL/{makkodu}/{seri}/{miktar}/{miktar2}")]
+        public JsonResult USKDL(string makkodu, string seri,string miktar,string miktar2)
         {
 
             DataTable table = new DataTable();
-            string query = @"SP_URETIM_" + makkodu.Substring(0, 2) + " '" + makkodu + "','" + seri + "'";
+            string query = @"SP_URETIM_" + makkodu.Substring(0, 2) + "2 '" + makkodu + "','" + seri + "','"+miktar+"','"+miktar2+"'";
 
 
             string sqldataSource = _configuration.GetConnectionString("Connn");

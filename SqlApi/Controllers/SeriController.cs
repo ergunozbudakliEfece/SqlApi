@@ -398,6 +398,33 @@ namespace SqlApi.Controllers
 
             return new JsonResult(table);
         }
+
+        [HttpGet("kontrol/detay/{seri}")]
+        public JsonResult GETSERIDETAY(string seri)
+        {
+
+
+            DataTable table = new DataTable();
+
+
+            string query = @"EXEC SP_SERITRA_KONTROL2 '" + seri + "'";
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
         [HttpGet("MAIL")]
         public string SENDMAIL()
         {
@@ -422,7 +449,24 @@ namespace SqlApi.Controllers
                 byte[] file = GeneratePdf(exec);
                 MailMessage mail = new MailMessage();
                 mail.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                //mail.Bcc.Add("EXPORT@efecegalvaniz.com");
+                mail.Bcc.Add("export@efecegalvaniz.com");
+                mail.Bcc.Add("hasanserdar.a@eurometali.ba");
+                mail.Bcc.Add("rusmin.delic@metalcentar.ba");
+                mail.Bcc.Add("info@frankstahl.com");
+                mail.Bcc.Add("supply@intercomgroup.bg");
+                mail.Bcc.Add("office@monolit99.com");
+                mail.Bcc.Add("k.kutsarov@maiak-m.bg");
+                mail.Bcc.Add("yt@kiziridis.gr");
+                mail.Bcc.Add("metalnetmk@yahoo.com");
+                mail.Bcc.Add("contact@gis.com.mk");
+                mail.Bcc.Add("ordanco@steelm-abc.com");
+                mail.Bcc.Add("nikos@michailidis-sons.gr");
+                mail.Bcc.Add("info@georgantas.gr");
+                mail.Bcc.Add("michalis@atsali-steel.com");
+                mail.Bcc.Add("jozo.miskic@frankstahl.ba");
+                mail.Bcc.Add("kenan.hukic@metalcentar.ba");
+                mail.Bcc.Add("import1@metalica-sa.gr");
+                mail.Bcc.Add("sales@ficom.al");
                 mail.From = new MailAddress("sistem@efecegalvaniz.com");
                 Attachment att = new Attachment(new MemoryStream(file), "EFECE_STOCK_LIST_" + DateTime.Now.ToShortDateString() + ".pdf");
                 mail.Attachments.Add(att);

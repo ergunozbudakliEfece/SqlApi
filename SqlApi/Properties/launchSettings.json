@@ -7,7 +7,9 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://192.168.2.209:82"
+      "applicationUrl": "http://192.168.2.209:82",
+      "use64Bit": true,
+      "ancmHostingModel": "InProcess"
     },
     "SqlApi": {
       "commandName": "Project",
