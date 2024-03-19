@@ -43,7 +43,36 @@ namespace SqlApi.Controllers
             }
             return new JsonResult(table);
         }
- 
+        [HttpGet("hzrsl/{s}")]
+        public JsonResult GetHZR(string s)
+        {
+            DataTable table = new DataTable();
+            string query = "";
+            if (s == "0")
+            {
+                query = @"EXEC SHIPPING_FORM_HZR_SEL";
+            }
+            else
+            {
+                query = @"EXEC SHIPPING_FORM_HZR_SEL '" + s + "'";
+            }
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
+
         [HttpGet("all")]
         public JsonResult GetAll1()
         {

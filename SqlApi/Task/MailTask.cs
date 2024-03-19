@@ -21,6 +21,15 @@ using System.Text;
 using SqlApi.Controllers;
 using Microsoft.Extensions.Caching.Memory;
 using System.Drawing;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using SqlApi.Helpers;
+using static SqlApi.Controllers.SeriController;
+using System.IO;
+using OfficeOpenXml;
+using iTextSharp.xmp.impl;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Data.OleDb;
 
 namespace SqlApi.Task
 {
@@ -67,9 +76,6 @@ namespace SqlApi.Task
 
 
                         DoWork(currentTime);
-
-
-
 
 
                 }
@@ -829,6 +835,54 @@ namespace SqlApi.Task
                    
 
                 }
+                else if(currentTime.Hour == 14 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
+                {
+                    OleDbConnection con;
+                    OleDbCommand cmd;
+                    OleDbDataReader dr;
+                    List<ExportExcelModel> list = new List<ExportExcelModel>();
+                    try
+                    {
+                        con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\192.168.2.3\ortak\YENİ Export-Ortak\EXPORT_STOCK_MAIL_LIST.xlsx; Extended Properties='Excel 12.0 xml;HDR=YES;READONLY=TRUE'");
+
+                        cmd = new OleDbCommand("Select * FROM [Sayfa1$A1:B]", con);
+                        con.Open();
+                        dr = cmd.ExecuteReader();
+
+                        while (dr.Read())
+                        {
+
+                            ExportExcelModel excel = new ExportExcelModel();
+                            if (dr["email"].ToString() != "")
+                            {
+                                excel.MAIL = dr["email"].ToString();
+                                list.Add(excel);
+                            }
+                            
+
+
+
+
+                        }
+                        con.Close();
+                        var mailList = string.Join(",", list.Select(x => x.MAIL));
+                        SENDMAIL(mailList);
+                    }
+                    catch (Exception e)
+                    {
+                        MailMessage mail1 = new MailMessage();
+                        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
+                        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
+                        smtp1.Host = "192.168.2.13";
+                        smtp1.UseDefaultCredentials = true;
+                        mail1.IsBodyHtml = true;
+                        mail1.Subject = "EFECE STOCK LIST";
+                        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                        mail1.Body = e.Message;
+                        smtp1.Send(mail1);
+                    }
+                   
+                }
                 else
                 {
                     test = true;
@@ -884,49 +938,54 @@ namespace SqlApi.Task
                         mycon2.Close();
                     }
                 }
-
-                string URI = "http://192.168.2.13:83/api/login/login";
-                string myParameters = "Email=ergunozbudakli@efecegalvaniz.com&Password=begum142088";
-                string HtmlResult = "";
-                using (WebClient wc = new WebClient())
+                List<MusteriModel> musteriList;
+                using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
                 {
-                    wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    HtmlResult = wc.UploadString(URI, myParameters);
-
+                    mycon2.Open();
+                    using (SqlCommand myCommand1 = new SqlCommand("Select * FROM TBL_MUSTERI WHERE PLASIYER<>'admin'", mycon2))
+                    {
+                        sqlreader2 = myCommand1.ExecuteReader();
+                        musteriList = DataReaderMapToList<MusteriModel>(sqlreader2);
+                        sqlreader2.Close();
+                        mycon2.Close();
+                    }
                 }
-
-                var apiUrl = "http://192.168.2.13:83/api/musteri";
-                //Connect API
-                Uri url = new Uri(apiUrl);
-                WebClient client = new WebClient();
-                client.Encoding = System.Text.Encoding.UTF8;
-                client.Headers.Add("Authorization", "Bearer " + HtmlResult);
-                string json = client.DownloadString(url);
-                var apiUrluser = "http://192.168.2.13:83/api/user";
-                //Connect API
-                Uri urluser = new Uri(apiUrluser);
-                WebClient clientuser = new WebClient();
-                clientuser.Encoding = System.Text.Encoding.UTF8;
-                clientuser.Headers.Add("Authorization", "Bearer " + HtmlResult);
-                string jsonuser = clientuser.DownloadString(urluser);
-                List<UserModel> users = JsonConvert.DeserializeObject<List<UserModel>>(jsonuser);
-                var apiUrlurun = "http://192.168.2.13:83/api/musteri/urun";
-                //Connect API
-                Uri urlurun = new Uri(apiUrlurun);
-                WebClient clienturun = new WebClient();
-                clienturun.Encoding = System.Text.Encoding.UTF8;
-                clienturun.Headers.Add("Authorization", "Bearer " + HtmlResult);
-                string jsonurun = clienturun.DownloadString(urlurun);
-                List<MusteriUrunModel> urunler = JsonConvert.DeserializeObject<List<MusteriUrunModel>>(jsonurun);
-                List<MusteriModel> musteriList = JsonConvert.DeserializeObject<List<MusteriModel>>(json);
-
-                var randevuUrl = "http://192.168.2.13:83/api/musteri/randevu";
-                //Connect API
-                Uri urlrandevu = new Uri(randevuUrl);
-                WebClient clientrandevu = new WebClient();
-                clientrandevu.Encoding = System.Text.Encoding.UTF8;
-                string jsonrandevu = clientrandevu.DownloadString(urlrandevu);
-                List<MusteriRandevuModel> randevu = JsonConvert.DeserializeObject<List<MusteriRandevuModel>>(jsonrandevu);
+                List<UserModel> users;
+                using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
+                {
+                    mycon2.Open();
+                    using (SqlCommand myCommand1 = new SqlCommand("Select * FROM TBL_USER_DATA", mycon2))
+                    {
+                        sqlreader2 = myCommand1.ExecuteReader();
+                        users = DataReaderMapToList<UserModel>(sqlreader2);
+                        sqlreader2.Close();
+                        mycon2.Close();
+                    }
+                }
+                List<MusteriUrunModel> urunler;
+                using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
+                {
+                    mycon2.Open();
+                    using (SqlCommand myCommand1 = new SqlCommand("Select * FROM TBL_MUSTERI_URUN_BILGI", mycon2))
+                    {
+                        sqlreader2 = myCommand1.ExecuteReader();
+                        urunler = DataReaderMapToList<MusteriUrunModel>(sqlreader2);
+                        sqlreader2.Close();
+                        mycon2.Close();
+                    }
+                }
+                List<MusteriRandevuModel> randevu;
+                using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
+                {
+                    mycon2.Open();
+                    using (SqlCommand myCommand1 = new SqlCommand("Select * FROM TBL_MUSTERI_RANDEVU", mycon2))
+                    {
+                        sqlreader2 = myCommand1.ExecuteReader();
+                        randevu = DataReaderMapToList<MusteriRandevuModel>(sqlreader2);
+                        sqlreader2.Close();
+                        mycon2.Close();
+                    }
+                }
                 var randevuplanlanan = randevu.Where(x => (DateTime)x.PLANLANAN_TARIH > date && (DateTime)x.PLANLANAN_TARIH < date.AddDays(7)).ToList();
                 var randevugerceklesen = randevu.Where(x => (DateTime)x.PLANLANAN_TARIH > date.AddDays(-7)).ToList();
                 var uruneklenen = urunler.Where(x => (DateTime)x.DEGISIKLIK_TARIHI > date.AddDays(-7)).ToList();
@@ -948,24 +1007,33 @@ namespace SqlApi.Task
                         plasiyerler.Add(plasiyer);
                     }
                 });
-                Parallel.ForEach(plasiyerler, plasiyer =>
+                for (var j = 0; j < plasiyerler.Count; j++)
                 {
-                    var fullname = users.Where(x => x.USER_NAME == plasiyer).ToList();
+                    var fullname = users.Where(x => x.USER_NAME == plasiyerler[j]).ToList();
                     List<int> musteriIdler = new List<int>();
                     var icerik = "";
                     var icerik1 = "";
                     var icerik2 = "";
                     var icerik3 = "";
-                    string subject = "CRM Raporu | " + GetWeekNumber(date) + ".Hafta | " + fullname[0].USER_FIRSTNAME + " " + fullname[0].USER_LASTNAME;
-                    var plMusteriList = musteriList.Where(x => x.PLASIYER == plasiyer).ToList();
+                    //string subject = "CRM Raporu | " + GetWeekNumber(date) + ".Hafta | " + fullname[0].USER_FIRSTNAME + " " + fullname[0].USER_LASTNAME;
+                    string subject = "CRM Raporu | "+GetWeekNumber(date) +".Hafta | " + fullname[0].USER_FIRSTNAME + " " + fullname[0].USER_LASTNAME;
+                    var plMusteriList = musteriList.Where(x => x.PLASIYER == plasiyerler[j]).ToList();
                     var plrandevuplanlanan = randevuplanlanan.Where(x => x.KAYIT_YAPAN_KULLANICI_ID == fullname[0].USER_ID).ToList();
-                    var plUrunList = uruneklenen.Where(x => x.KAYIT_YAPAN_KULLANICI == plasiyer).ToList();
+                    var plUrunList = uruneklenen.Where(x => x.KAYIT_YAPAN_KULLANICI == plasiyerler[j]).ToList();
                     for (int a = 0; a < plMusteriList.Count; a++)
                     {
                         var musteriId = plMusteriList[a].MUSTERI_ID;
                         if (!musteriIdler.Contains(musteriId))
                         {
-                            musteriIdler.Add(musteriId);
+                            try
+                            {
+
+                                musteriIdler.Add(musteriId);
+                            }
+                            catch (Exception e)
+                            {
+                                var error = e.Message;
+                            }
                         }
                         if (plMusteriList[a].KAYIT_TARIHI > date.AddDays(-7))
                         {
@@ -1095,10 +1163,10 @@ namespace SqlApi.Task
                             "</br></br></br>" + img;
 
 
-                    
+
                     string den = exec2[0].BCC.Substring(0, exec2[0].BCC.Length - 1);
                     mail.Bcc.Add(den);
-                    //mail.Bcc.Add("ergunozbudakli@efecegalvaniz.com");
+                    //mail.Bcc.Add("surecgelistirme@efecegalvaniz.com");
                     //mail.Bcc.Add("ugurkonakci@efecegalvaniz.com");
                     mail.From = new MailAddress("sistem@efecegalvaniz.com");
                     mail.Body = body;
@@ -1110,30 +1178,32 @@ namespace SqlApi.Task
                     SmtpClient smtp = new System.Net.Mail.SmtpClient();
                     smtp.Host = "192.168.2.13";
                     smtp.UseDefaultCredentials = true;
-
-                    if (fullname[0].USER_FIRSTNAME != "Admin")
+                    if(icerik==""&& icerik1 == "" && icerik2 == "" && icerik3 == "")
                     {
-
-                        smtp.Send(mail);
-
-
+                        
                     }
-                });
+                    else
+                    {
+                        smtp.Send(mail);
+                    }
+
+                };
             }
             catch (Exception e)
             {
-                mail.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                mail.From = new MailAddress("sistem@efecegalvaniz.com");
-                mail.Body = e.Message;
-                mail.Subject = "HATA";
+                MailMessage mail1 = new MailMessage();
+                mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                mail1.From = new MailAddress("sistem@efecegalvaniz.com");
+                mail1.Body = e.Message;
+                mail1.Subject = "HATA";
 
 
-                mail.IsBodyHtml = true;
+                mail1.IsBodyHtml = true;
 
-                SmtpClient smtp = new System.Net.Mail.SmtpClient();
-                smtp.Host = "192.168.2.13";
-                smtp.UseDefaultCredentials = true;
-                smtp.Send(mail);
+                SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
+                smtp1.Host = "192.168.2.13";
+                smtp1.UseDefaultCredentials = true;
+                smtp1.Send(mail1);
 
 
             }
@@ -1650,6 +1720,196 @@ namespace SqlApi.Task
 
         #endregion
 
+        #endregion
+
+        #region ExportMail
+        public void SENDMAIL(string mailList)
+        {
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress("sistem@efecegalvaniz.com");
+            SmtpClient smtp = new System.Net.Mail.SmtpClient();
+            smtp.Host = "192.168.2.13";
+            smtp.UseDefaultCredentials = true;
+            mail.IsBodyHtml = true;
+            mail.Subject = "EFECE STOCK LIST";
+            try
+            {
+                string query = @"EXEC EXPORT_MAIL_STOCK";
+                
+                List<ExportMailModel> exec;
+                string sqldataSource = _configuration.GetConnectionString("Connn");
+                SqlDataReader sqlreader;
+                using (SqlConnection mycon = new SqlConnection(sqldataSource))
+                {
+                    mycon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                    {
+                        sqlreader = myCommand.ExecuteReader();
+                        exec = DataReaderMapToList<ExportMailModel>(sqlreader);
+                        sqlreader.Close();
+                        mycon.Close();
+                    }
+                }
+
+                byte[] file = GeneratePdf(exec);
+
+                mail.Bcc.Add(mailList);
+                //mail.Bcc.Add("ergunozbudakli@efecegalvaniz.com");
+
+                Attachment att = new Attachment(new MemoryStream(file), "EFECE_STOCK_LIST_" + DateTime.Now.ToShortDateString() + ".pdf");
+                mail.Attachments.Add(att);
+                
+                mail.Body = "<p>Dear Partners;</p><p>Attached you can find our weekly stock list. Have a special inquiry? Please contact us.</p><p>If you no longer want to receive this list, please reply to <a href=\"mailto:export@efecegalvaniz.com\">export@efecegalvaniz.com</a>.</p><p>Kind Regards,</p>" + NovaImzaModel.ExportImza;
+
+               
+
+                
+                smtp.Send(mail);
+            }
+            catch (Exception e)
+            {
+                MailMessage mail1 = new MailMessage();
+                mail1.From = new MailAddress("sistem@efecegalvaniz.com");
+                SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
+                smtp1.Host = "192.168.2.13";
+                smtp1.UseDefaultCredentials = true;
+                mail1.IsBodyHtml = true;
+                mail1.Subject = "EFECE STOCK LIST";
+                mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                mail1.Body=e.Message;
+                smtp1.Send(mail1);
+            }
+
+
+        }
+        public byte[] GeneratePdf(List<ExportMailModel> data)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var document = new iTextSharp.text.Document(iTextSharp.text.PageSize.A4, 20f, 20f, 80f, 40f))
+                {
+                    try
+                    {
+                        PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+                        writer.CloseStream = false;
+                        document.Open();
+                        PdfPTable table = new PdfPTable(6);
+                        table.TotalWidth = 575f;
+                        table.LockedWidth = true;
+
+                        PdfPCell header = new PdfPCell(new Phrase("STOCK NAME"));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.UseVariableBorders = true;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        //0=Left, 1=Centre, 2=Right
+                        table.AddCell(header);
+                        header = new PdfPCell(new Phrase("MATERIAL"));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        table.AddCell(header);
+                        header = new PdfPCell(new Phrase("LENGTH (MM)"));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        table.AddCell(header);
+                        header = new PdfPCell(new Phrase("BUNDLE SIZE (PCS)"));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        table.AddCell(header);
+                        header = new PdfPCell(new Phrase("STOCK QTY (KG)"));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        table.AddCell(header);
+                        header = new PdfPCell(new Phrase("STOCK QTY (PCS)"));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        table.AddCell(header);
+                        for (int i = 0; i < data.Count; i++)
+                        {
+                            header = new PdfPCell(new Phrase(data[i].STOCK_NAME));
+                            header.HorizontalAlignment = 0;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                            header = new PdfPCell(new Phrase(data[i].MATERIAL));
+                            header.HorizontalAlignment = 1;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                            header = new PdfPCell(new Phrase(data[i].LENGTH_MM.ToString()));
+                            header.HorizontalAlignment = 1;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                            header = new PdfPCell(new Phrase(data[i].BUNDLE_SIZE_PCS.ToString("N0", CultureInfo.GetCultureInfo("tr-TR"))));
+                            header.HorizontalAlignment = 1;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                            header = new PdfPCell(new Phrase(data[i].STOCK_QTY_KG.ToString("N0", CultureInfo.GetCultureInfo("tr-TR"))));
+                            header.HorizontalAlignment = 2;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                            header = new PdfPCell(new Phrase(data[i].STOCK_QTY_PCS.ToString("N0", CultureInfo.GetCultureInfo("tr-TR"))));
+                            header.HorizontalAlignment = 2;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                        }
+                        table.SetWidths(new float[] { 8.5f, 7.5f, 3.5f, 4.5f, 3.5f, 4.5f });
+                        var s = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\ExportMailPdf\\export_mail.png");
+                        iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(s);
+                        jpg.Alignment = iTextSharp.text.Image.UNDERLYING;
+                        jpg.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
+                        jpg.SetAbsolutePosition(0, 0);
+                        writer.PageEvent = new ImageBackgroundHelper(jpg);
+
+                        document.Add(table);
+                        document.Add(new iTextSharp.text.Paragraph("* Stock list is dynamic and is subject to confirmation."));
+                        document.Add(new iTextSharp.text.Paragraph("* Please contact for special dimension inquiries. "));
+                        document.Add(new iTextSharp.text.Paragraph("* Zinc spray on welding line is NOT included for stock items."));
+                        document.Add(new iTextSharp.text.Paragraph("* Minus thickness tolerances are utilized for stock list items."));
+                        document.Add(new iTextSharp.text.Paragraph("* Invoicing is done according to actual weight upon selection of your requested items."));
+                        document.Close();
+                        byte[] docArray = memoryStream.ToArray();
+                        return docArray;
+                    }
+                    catch (Exception e)
+                    {
+                        MailMessage mail1 = new MailMessage();
+                        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
+                        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
+                        smtp1.Host = "192.168.2.13";
+                        smtp1.UseDefaultCredentials = true;
+                        mail1.IsBodyHtml = true;
+                        mail1.Subject = "EFECE STOCK LIST";
+                        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                        mail1.Body = e.Message;
+                        smtp1.Send(mail1);
+                    }
+                    
+                }
+
+            }
+            return null;
+        }
+
+        #endregion
+
+        #region ExceldenVeriAlma
+        public class ExportExcelModel
+        {
+            [Excel("Country")]
+            public string COUNTRY { get; set; }
+            [Excel("email")]
+            public string MAIL { get; set; }
+        }
         #endregion
     }
 }
