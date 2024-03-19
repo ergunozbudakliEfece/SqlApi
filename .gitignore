@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/SqlApi/Controllers/ExportMailModel.cs
+/SqlApi/Resources/ExportMailPdf/export_mail.png
+/.gitignore
