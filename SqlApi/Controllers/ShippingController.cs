@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using iTextSharp.text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Nancy;
 using Nancy.Json;
 using SqlApi.Models;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -70,6 +72,83 @@ namespace SqlApi.Controllers
                     mycon.Close();
                 }
             }
+            return new JsonResult(table);
+        }
+
+        [HttpGet("hzrsl/durum/{INCKEY}")]
+        public JsonResult HazirListeDurumDegistir(int INCKEY)
+        {
+            DataTable table = new DataTable();
+            string query;
+
+            query = $@"EXEC SP_SH_FRM_HZR_AP '{INCKEY}'";
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
+
+        [HttpPost("hzrsl")]
+        public IActionResult ShippingHzrInsert(List<ShippingModel> shippingList)
+        {
+            DataTable table = new DataTable();
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+
+                foreach(ShippingModel shipping in shippingList)
+                {
+                    string query = @"EXEC SHIPPING_FORM_HZR_INS '" + shipping.TYPE + "','" + shipping.BELGE_NO + "','" + shipping.SIPARIS_NO + "','" + shipping.IRS_NO + "','" + shipping.SERI_NO + "','" + shipping.STOK_KODU + "','" + shipping.MIKTAR1 + "','" + shipping.OLCU_BR1 + "','" + shipping.MIKTAR2 + "','" + shipping.OLCU_BR2 + "','" + shipping.ACIK2 + "','" + shipping.ACIK1 + "','" + shipping.ACIK3 + "','" + shipping.SERI_NO_3 + "','" + shipping.SERI_NO_4 + "','" + shipping.ACIKLAMA_4 + "','" + shipping.ACIKLAMA_5 + "'," + shipping.INS_USER_ID + ",'" + shipping.UPD_USER_ID + "','" + shipping.EXP_1 + "','" + shipping.EXP_2 + "','" + shipping.EXP_3 + "','" + shipping.GIRIS_DEPO + "','" + shipping.CIKIS_DEPO + "','" + shipping.PLAKA + "','" + shipping.SOFOR + "'";
+
+                    using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                    {
+                        sqlreader = myCommand.ExecuteReader();
+                        sqlreader.Close();
+                    }
+                }
+
+                mycon.Close();
+            }
+
+            return Ok();
+        }
+
+        [HttpGet("hzrbn/{type}")]
+        public JsonResult GetNumber(int type)
+        {
+            DataTable table = new DataTable();
+
+
+            string query = @"EXEC SHIPPING_FORM_HZR_BN " + type;
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+
             return new JsonResult(table);
         }
 
