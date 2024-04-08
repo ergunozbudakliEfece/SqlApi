@@ -150,6 +150,31 @@ namespace SqlApi.Controllers
 
             return new JsonResult(table);
         }
+        [HttpGet("planlama")]
+        public JsonResult GETPlan()
+        {
+
+
+            DataTable table = new DataTable();
+
+
+            string query = @"EXEC SP_NOVA_ISEMRI_PLAN_SEL";
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
         [HttpGet("hatgirdisira/{hk}/{cs}/{us}")]
         public JsonResult GETSira(string hk,string cs,string us)
         {

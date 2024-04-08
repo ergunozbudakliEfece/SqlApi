@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 //using NetOpenX50;
-using SqlApi.Migrations;
+
 using SqlApi.Models;
 using System;
 using System.Collections;

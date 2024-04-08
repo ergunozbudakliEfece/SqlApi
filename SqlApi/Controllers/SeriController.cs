@@ -14,6 +14,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text;
 using System.Reflection;
 using SqlApi.Helpers;
+using Newtonsoft.Json;
 
 namespace SqlApi.Controllers
 {
@@ -176,7 +177,7 @@ namespace SqlApi.Controllers
             return new JsonResult(table);
         }
         [HttpGet("serirehber")]
-        public JsonResult GetSeriRehber()
+        public object GetSeriRehber()
         {
 
 
@@ -199,7 +200,25 @@ namespace SqlApi.Controllers
                 }
             }
 
-            return new JsonResult(table);
+            return DataTableToJSON(table);
+        }
+        public static object DataTableToJSON(DataTable table)
+        {
+            var list = new List<Dictionary<string, object>>();
+
+            foreach (DataRow row in table.Rows)
+            {
+                var dict = new Dictionary<string, object>();
+
+                foreach (DataColumn col in table.Columns)
+                {
+                    dict[col.ColumnName] = row[col];
+                }
+                list.Add(dict);
+            }
+
+            var json = JsonConvert.SerializeObject(list);
+            return json;
         }
         [HttpGet("serirehbertumu")]
         public JsonResult GetSeriRehberTumu()
@@ -430,6 +449,7 @@ namespace SqlApi.Controllers
         public class ExportMailModel
         {
             public string STOCK_NAME { get; set; }
+            public string STOK_ADI { get; set; }
             public string MATERIAL { get; set; }
             public int LENGTH_MM { get; set; }
             public int BUNDLE_SIZE_PCS { get; set; }

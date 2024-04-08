@@ -45,6 +45,29 @@ namespace SqlApi.Controllers
             }
             return new JsonResult(table);
         }
+        [HttpGet("import")]
+        public JsonResult GetExc()
+        {
+            DataTable table = new DataTable();
+
+
+            string query = @"SELECT * FROM NOVA_VW_SHIPPING_FORM";//ithalattan gelen malların günlük excel raporu için
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
         [HttpGet("hzrsl/{s}")]
         public JsonResult GetHZR(string s)
         {

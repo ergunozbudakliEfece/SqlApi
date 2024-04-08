@@ -50,6 +50,7 @@ namespace SqlApi.Task
         int day = 0;
         int day1 = 0;
         int day2 = 0;
+        bool musteriKontrol= false;
         public System.Threading.Tasks.Task StartAsync(CancellationToken cancellationToken)
         {
 
@@ -70,421 +71,419 @@ namespace SqlApi.Task
                     day2 = 0;
                 }
 
-                if (currentTime.DayOfWeek == DayOfWeek.Saturday && currentTime.Hour == 15 && currentTime.Minute == 0 && currentTime.Second == 0 && day1==0)
+                if (currentTime.DayOfWeek == DayOfWeek.Saturday && currentTime.Hour == 15 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.Millisecond == 0)
                 {
-                    day1 = currentTime.Second;
 
-
-                        DoWork(currentTime);
-
+                    Singleton fromsingleton = Singleton.GetInstance();
+                    fromsingleton.DoWork(currentTime,_configuration);
 
                 }
-                else if (currentTime.Hour == 8 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond==0 && currentTime.DayOfWeek != DayOfWeek.Sunday)
-                {
-                    MailMessage mail = new MailMessage();
-                    try
-                    {
-                        string query2 = @" EXEC SP_SEND_MAIL 2";
-                        List<MailModel> exec2 = null;
-                        string sqldataSource2 = _configuration.GetConnectionString("Connn");
-                        SqlDataReader sqlreader2;
-                        using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
-                        {
-                            mycon2.Open();
-                            using (SqlCommand myCommand1 = new SqlCommand(query2, mycon2))
-                            {
-                                sqlreader2 = myCommand1.ExecuteReader();
-                                exec2 = DataReaderMapToList<MailModel>(sqlreader2);
-                                sqlreader2.Close();
-                                mycon2.Close();
-                            }
-                        }
+                //else if (currentTime.Hour == 8 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond==0 && currentTime.DayOfWeek != DayOfWeek.Sunday)
+                //{
+                //    MailMessage mail = new MailMessage();
+                //    try
+                //    {
+                //        string query2 = @" EXEC SP_SEND_MAIL 2";
+                //        List<MailModel> exec2 = null;
+                //        string sqldataSource2 = _configuration.GetConnectionString("Connn");
+                //        SqlDataReader sqlreader2;
+                //        using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
+                //        {
+                //            mycon2.Open();
+                //            using (SqlCommand myCommand1 = new SqlCommand(query2, mycon2))
+                //            {
+                //                sqlreader2 = myCommand1.ExecuteReader();
+                //                exec2 = DataReaderMapToList<MailModel>(sqlreader2);
+                //                sqlreader2.Close();
+                //                mycon2.Close();
+                //            }
+                //        }
 
 
-                        string query1 = @"EXEC RAPOR_TEST";
-                        var body = "";
-                        List<RaporTest> exec = null;
-                        string sqldataSource1 = _configuration.GetConnectionString("Connn");
-                        SqlDataReader sqlreader1;
-                        using (SqlConnection mycon1 = new SqlConnection(sqldataSource1))
-                        {
-                            mycon1.Open();
-                            using (SqlCommand myCommand1 = new SqlCommand(query1, mycon1))
-                            {
-                                sqlreader1 = myCommand1.ExecuteReader();
-                                exec = DataReaderMapToList<RaporTest>(sqlreader1);
-                                sqlreader1.Close();
-                                mycon1.Close();
-                            }
-                        }
+                //        string query1 = @"EXEC RAPOR_TEST";
+                //        var body = "";
+                //        List<RaporTest> exec = null;
+                //        string sqldataSource1 = _configuration.GetConnectionString("Connn");
+                //        SqlDataReader sqlreader1;
+                //        using (SqlConnection mycon1 = new SqlConnection(sqldataSource1))
+                //        {
+                //            mycon1.Open();
+                //            using (SqlCommand myCommand1 = new SqlCommand(query1, mycon1))
+                //            {
+                //                sqlreader1 = myCommand1.ExecuteReader();
+                //                exec = DataReaderMapToList<RaporTest>(sqlreader1);
+                //                sqlreader1.Close();
+                //                mycon1.Close();
+                //            }
+                //        }
 
-                        for (var i = 0; i < exec.Count; i++)
-                        {
-                            var col = "white";
-                            var col2 = "lightgreen";
-                            if (exec[i].GIRIS != "-")
-                            {
-                                if (Int32.Parse(exec[i].GIRIS.Replace(":", "")) > 800)
-                                {
-                                    col = "#FFCCCB";
-                                }
-                                else
-                                {
-                                    col = "lightgreen";
-                                }
-                            }
+                //        for (var i = 0; i < exec.Count; i++)
+                //        {
+                //            var col = "white";
+                //            var col2 = "lightgreen";
+                //            if (exec[i].GIRIS != "-")
+                //            {
+                //                if (Int32.Parse(exec[i].GIRIS.Replace(":", "")) > 800)
+                //                {
+                //                    col = "#FFCCCB";
+                //                }
+                //                else
+                //                {
+                //                    col = "lightgreen";
+                //                }
+                //            }
 
-                            if (exec[i].CIKIS != "-")
-                            {
-                                if (currentTime.DayOfWeek == DayOfWeek.Saturday)
-                                {
-                                    if (Int32.Parse(exec[i].CIKIS.Replace(":", "")) < 1500)
-                                    {
-                                        col2 = "#FFCCCB";
-                                    }
-                                }
-                                else
-                                {
-                                    if (Int32.Parse(exec[i].CIKIS.Replace(":", "")) < 1800)
-                                    {
-                                        col2 = "#FFCCCB";
-                                    }
-                                }
+                //            if (exec[i].CIKIS != "-")
+                //            {
+                //                if (currentTime.DayOfWeek == DayOfWeek.Saturday)
+                //                {
+                //                    if (Int32.Parse(exec[i].CIKIS.Replace(":", "")) < 1500)
+                //                    {
+                //                        col2 = "#FFCCCB";
+                //                    }
+                //                }
+                //                else
+                //                {
+                //                    if (Int32.Parse(exec[i].CIKIS.Replace(":", "")) < 1800)
+                //                    {
+                //                        col2 = "#FFCCCB";
+                //                    }
+                //                }
 
-                            }
+                //            }
 
-                            if (!body.Contains(exec[i].NAME))
-                            {
-                                var liste = exec.Where(x => x.NAME.Equals(exec[i].NAME)).ToList();
-                                if (liste.Count > 1)
-                                {
-                                    var t = "";
-                                    body = body + "<tr><td rowspan='" + liste.Count + "' style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td>";
-                                    for (var a = 0; a < liste.Count; a++)
-                                    {
-                                        if (a == 0)
-                                        {
-                                            if (liste[a].GIRIS != "-")
-                                            {
-                                                t = "<td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].CIKIS + "</td></tr>";
-                                            }
-                                            else
-                                            {
-                                                t = "<td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].CIKIS + "</td></tr>";
-                                            }
+                //            if (!body.Contains(exec[i].NAME))
+                //            {
+                //                var liste = exec.Where(x => x.NAME.Equals(exec[i].NAME)).ToList();
+                //                if (liste.Count > 1)
+                //                {
+                //                    var t = "";
+                //                    body = body + "<tr><td rowspan='" + liste.Count + "' style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td>";
+                //                    for (var a = 0; a < liste.Count; a++)
+                //                    {
+                //                        if (a == 0)
+                //                        {
+                //                            if (liste[a].GIRIS != "-")
+                //                            {
+                //                                t = "<td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].CIKIS + "</td></tr>";
+                //                            }
+                //                            else
+                //                            {
+                //                                t = "<td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].CIKIS + "</td></tr>";
+                //                            }
 
-                                        }
-                                        else if (a == liste.Count - 1)
-                                        {
-                                            if (liste[a].CIKIS != "-")
-                                            {
-                                                if (currentTime.DayOfWeek == DayOfWeek.Saturday)
-                                                {
+                //                        }
+                //                        else if (a == liste.Count - 1)
+                //                        {
+                //                            if (liste[a].CIKIS != "-")
+                //                            {
+                //                                if (currentTime.DayOfWeek == DayOfWeek.Saturday)
+                //                                {
 
-                                                    if (Int32.Parse(liste[a].CIKIS.Replace(":", "")) < 1500)
-                                                    {
-                                                        col2 = "#FFCCCB";
-                                                    }
-                                                    else
-                                                    {
-                                                        col2 = "lightgreen";
-                                                    }
-                                                }
-                                                else
-                                                {
+                //                                    if (Int32.Parse(liste[a].CIKIS.Replace(":", "")) < 1500)
+                //                                    {
+                //                                        col2 = "#FFCCCB";
+                //                                    }
+                //                                    else
+                //                                    {
+                //                                        col2 = "lightgreen";
+                //                                    }
+                //                                }
+                //                                else
+                //                                {
 
-                                                    if (Int32.Parse(liste[a].CIKIS.Replace(":", "")) < 1800)
-                                                    {
-                                                        col2 = "#FFCCCB";
-                                                    }
-                                                    else
-                                                    {
-                                                        col2 = "lightgreen";
-                                                    }
-                                                }
+                //                                    if (Int32.Parse(liste[a].CIKIS.Replace(":", "")) < 1800)
+                //                                    {
+                //                                        col2 = "#FFCCCB";
+                //                                    }
+                //                                    else
+                //                                    {
+                //                                        col2 = "lightgreen";
+                //                                    }
+                //                                }
 
-                                            }
-                                            if (liste[a].CIKIS != "-")
-                                            {
-                                                t = t + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col2 + "'>" + liste[a].CIKIS + "</td></tr>";
-                                            }
-                                            else
-                                            {
-                                                t = t + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>-</td></tr>";
-                                            }
+                //                            }
+                //                            if (liste[a].CIKIS != "-")
+                //                            {
+                //                                t = t + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col2 + "'>" + liste[a].CIKIS + "</td></tr>";
+                //                            }
+                //                            else
+                //                            {
+                //                                t = t + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>-</td></tr>";
+                //                            }
 
-                                        }
-                                        else
-                                        {
+                //                        }
+                //                        else
+                //                        {
 
-                                            t = t + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].CIKIS + "</td></tr>";
-                                        }
-
-
-                                    }
-                                    body = body + t;
-                                }
-                                else
-                                {
-                                    if (liste[0].CIKIS != "-")
-                                    {
-                                        body = body + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[0].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col2 + "'>" + liste[0].CIKIS + "</td></tr>";
-                                    }
-                                    else
-                                    {
-                                        body = body + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[0].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>-</td></tr>";
-                                    }
-
-                                }
-                            }
+                //                            t = t + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].CIKIS + "</td></tr>";
+                //                        }
 
 
+                //                    }
+                //                    body = body + t;
+                //                }
+                //                else
+                //                {
+                //                    if (liste[0].CIKIS != "-")
+                //                    {
+                //                        body = body + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[0].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col2 + "'>" + liste[0].CIKIS + "</td></tr>";
+                //                    }
+                //                    else
+                //                    {
+                //                        body = body + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[0].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>-</td></tr>";
+                //                    }
+
+                //                }
+                //            }
 
 
-                        }
-                        var img = NovaImzaModel.Imza;
-                        var table = "Günaydın,</br></br>" + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek] + " günü 08:30 öncesi personel hareket raporudur:</br></br> <table style='border: 1px solid #CCCCCC;border-collapse: collapse;'>" +
-                        "<tr><th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> İsim </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspGiriş Zamanı&nbsp</th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspÇıkış Zamanı&nbsp</th></tr>" + body + "</table>" + img;
+
+
+                //        }
+                //        var img = NovaImzaModel.Imza;
+                //        var table = "Günaydın,</br></br>" + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek] + " günü 08:30 öncesi personel hareket raporudur:</br></br> <table style='border: 1px solid #CCCCCC;border-collapse: collapse;'>" +
+                //        "<tr><th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> İsim </th>" +
+                //        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspGiriş Zamanı&nbsp</th>" +
+                //        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspÇıkış Zamanı&nbsp</th></tr>" + body + "</table>" + img;
                         
-                        string den = exec2[0].BCC.Substring(0, exec2[0].BCC.Length - 1);
-                        string den1 = exec2[0].CC;
-                        string den2 = exec2[0].TO;
-                        if (den1 != null)
-                        {
-                            mail.CC.Add(den1.Substring(0, exec2[0].BCC.Length - 1));
-                        }
-                        if (den2 != null)
-                        {
-                            mail.To.Add(den2.Substring(0, exec2[0].TO.Length - 1));
-                        }
+                //        string den = exec2[0].BCC.Substring(0, exec2[0].BCC.Length - 1);
+                //        string den1 = exec2[0].CC;
+                //        string den2 = exec2[0].TO;
+                //        if (den1 != null)
+                //        {
+                //            mail.CC.Add(den1.Substring(0, exec2[0].BCC.Length - 1));
+                //        }
+                //        if (den2 != null)
+                //        {
+                //            mail.To.Add(den2.Substring(0, exec2[0].TO.Length - 1));
+                //        }
 
-                        mail.Bcc.Add(den);
-                        //mail.Bcc.Add("ergunozbudakli@efecegalvaniz.com");
-                        mail.From = new MailAddress("sistem@efecegalvaniz.com");
-                        mail.Body = table;
-                        mail.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " PERSONEL HAREKET RAPORU";
-
-
-
-                        mail.IsBodyHtml = true;
-
-                        SmtpClient smtp = new System.Net.Mail.SmtpClient();
-                        smtp.Host = "192.168.2.13";
-                        smtp.UseDefaultCredentials = true;
-                        smtp.Send(mail);
-                    }
-                    catch (Exception e)
-                    {
-                        mail.From = new MailAddress("sistem@efecegalvaniz.com");
-                        mail.Body = e.Message;
-                        mail.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " PERSONEL HAREKET RAPORU";
-                        mail.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                //        mail.Bcc.Add(den);
+                //        //mail.Bcc.Add("ergunozbudakli@efecegalvaniz.com");
+                //        mail.From = new MailAddress("sistem@efecegalvaniz.com");
+                //        mail.Body = table;
+                //        mail.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " PERSONEL HAREKET RAPORU";
 
 
-                        mail.IsBodyHtml = true;
 
-                        SmtpClient smtp = new System.Net.Mail.SmtpClient();
-                        smtp.Host = "192.168.2.13";
-                        smtp.UseDefaultCredentials = true;
-                        smtp.Send(mail);
-                    }
+                //        mail.IsBodyHtml = true;
+
+                //        SmtpClient smtp = new System.Net.Mail.SmtpClient();
+                //        smtp.Host = "192.168.2.13";
+                //        smtp.UseDefaultCredentials = true;
+                //        smtp.Send(mail);
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        mail.From = new MailAddress("sistem@efecegalvaniz.com");
+                //        mail.Body = e.Message;
+                //        mail.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " PERSONEL HAREKET RAPORU";
+                //        mail.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+
+
+                //        mail.IsBodyHtml = true;
+
+                //        SmtpClient smtp = new System.Net.Mail.SmtpClient();
+                //        smtp.Host = "192.168.2.13";
+                //        smtp.UseDefaultCredentials = true;
+                //        smtp.Send(mail);
+                //    }
                    
-                }
-                else if ((currentTime.Hour == 18 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday) || (currentTime.Hour == 15 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek == DayOfWeek.Saturday))
-                {
-                    MailMessage mail = new MailMessage();
-                    try
-                    {
-                        string query2 = @" EXEC SP_SEND_MAIL 2";
-                        List<MailModel> exec2 = null;
-                        string sqldataSource2 = _configuration.GetConnectionString("Connn");
-                        SqlDataReader sqlreader2;
-                        using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
-                        {
-                            mycon2.Open();
-                            using (SqlCommand myCommand1 = new SqlCommand(query2, mycon2))
-                            {
-                                sqlreader2 = myCommand1.ExecuteReader();
-                                exec2 = DataReaderMapToList<MailModel>(sqlreader2);
-                                sqlreader2.Close();
-                                mycon2.Close();
-                            }
-                        }
+                //}
+                //else if ((currentTime.Hour == 18 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday) || (currentTime.Hour == 15 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek == DayOfWeek.Saturday))
+                //{
+                //    MailMessage mail = new MailMessage();
+                //    try
+                //    {
+                //        string query2 = @" EXEC SP_SEND_MAIL 2";
+                //        List<MailModel> exec2 = null;
+                //        string sqldataSource2 = _configuration.GetConnectionString("Connn");
+                //        SqlDataReader sqlreader2;
+                //        using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
+                //        {
+                //            mycon2.Open();
+                //            using (SqlCommand myCommand1 = new SqlCommand(query2, mycon2))
+                //            {
+                //                sqlreader2 = myCommand1.ExecuteReader();
+                //                exec2 = DataReaderMapToList<MailModel>(sqlreader2);
+                //                sqlreader2.Close();
+                //                mycon2.Close();
+                //            }
+                //        }
 
 
-                        string query1 = @"EXEC RAPOR_TEST";
-                        var body = "";
-                        List<RaporTest> exec = null;
-                        string sqldataSource1 = _configuration.GetConnectionString("Connn");
-                        SqlDataReader sqlreader1;
-                        using (SqlConnection mycon1 = new SqlConnection(sqldataSource1))
-                        {
-                            mycon1.Open();
-                            using (SqlCommand myCommand1 = new SqlCommand(query1, mycon1))
-                            {
-                                sqlreader1 = myCommand1.ExecuteReader();
-                                exec = DataReaderMapToList<RaporTest>(sqlreader1);
-                                sqlreader1.Close();
-                                mycon1.Close();
-                            }
-                        }
-                        for (var i = 0; i < exec.Count; i++)
-                        {
-                            var col = "white";
-                            var col2 = "lightgreen";
-                            if (exec[i].GIRIS != "-")
-                            {
-                                if (Int32.Parse(exec[i].GIRIS.Replace(":", "")) > 800)
-                                {
-                                    col = "#FFCCCB";
-                                }
-                                else
-                                {
-                                    col = "lightgreen";
-                                }
-                            }
+                //        string query1 = @"EXEC RAPOR_TEST";
+                //        var body = "";
+                //        List<RaporTest> exec = null;
+                //        string sqldataSource1 = _configuration.GetConnectionString("Connn");
+                //        SqlDataReader sqlreader1;
+                //        using (SqlConnection mycon1 = new SqlConnection(sqldataSource1))
+                //        {
+                //            mycon1.Open();
+                //            using (SqlCommand myCommand1 = new SqlCommand(query1, mycon1))
+                //            {
+                //                sqlreader1 = myCommand1.ExecuteReader();
+                //                exec = DataReaderMapToList<RaporTest>(sqlreader1);
+                //                sqlreader1.Close();
+                //                mycon1.Close();
+                //            }
+                //        }
+                //        for (var i = 0; i < exec.Count; i++)
+                //        {
+                //            var col = "white";
+                //            var col2 = "lightgreen";
+                //            if (exec[i].GIRIS != "-")
+                //            {
+                //                if (Int32.Parse(exec[i].GIRIS.Replace(":", "")) > 800)
+                //                {
+                //                    col = "#FFCCCB";
+                //                }
+                //                else
+                //                {
+                //                    col = "lightgreen";
+                //                }
+                //            }
 
-                            if (currentTime.DayOfWeek == DayOfWeek.Saturday)
-                            {
-                                if (Int32.Parse(exec[i].CIKIS.Replace(":", "")) < 1500)
-                                {
-                                    col2 = "#FFCCCB";
-                                }
-                            }
-                            else
-                            {
-                                if (exec[i].CIKIS != "-")
-                                {
-                                    if (Int32.Parse(exec[i].CIKIS.Replace(":", "")) < 1800)
-                                    {
-                                        col2 = "#FFCCCB";
-                                    }
-                                }
+                //            if (currentTime.DayOfWeek == DayOfWeek.Saturday)
+                //            {
+                //                if (Int32.Parse(exec[i].CIKIS.Replace(":", "")) < 1500)
+                //                {
+                //                    col2 = "#FFCCCB";
+                //                }
+                //            }
+                //            else
+                //            {
+                //                if (exec[i].CIKIS != "-")
+                //                {
+                //                    if (Int32.Parse(exec[i].CIKIS.Replace(":", "")) < 1800)
+                //                    {
+                //                        col2 = "#FFCCCB";
+                //                    }
+                //                }
 
-                            }
+                //            }
 
-                            if (!body.Contains(exec[i].NAME))
-                            {
-                                var liste = exec.Where(x => x.NAME.Equals(exec[i].NAME)).ToList();
-                                if (liste.Count > 1)
-                                {
-                                    var t = "";
-                                    body = body + "<tr><td rowspan='" + liste.Count + "' style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td>";
-                                    for (var a = 0; a < liste.Count; a++)
-                                    {
-                                        if (a == 0)
-                                        {
+                //            if (!body.Contains(exec[i].NAME))
+                //            {
+                //                var liste = exec.Where(x => x.NAME.Equals(exec[i].NAME)).ToList();
+                //                if (liste.Count > 1)
+                //                {
+                //                    var t = "";
+                //                    body = body + "<tr><td rowspan='" + liste.Count + "' style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td>";
+                //                    for (var a = 0; a < liste.Count; a++)
+                //                    {
+                //                        if (a == 0)
+                //                        {
 
-                                            t = "<td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].CIKIS + "</td></tr>";
-                                        }
-                                        else if (a == liste.Count - 1)
-                                        {
-                                            if (liste[a].CIKIS != "-")
-                                            {
-                                                if (currentTime.DayOfWeek == DayOfWeek.Saturday)
-                                                {
-                                                    if (Int32.Parse(liste[a].CIKIS.Replace(":", "")) < 1500)
-                                                    {
-                                                        col2 = "#FFCCCB";
-                                                    }
-                                                    else
-                                                    {
-                                                        col2 = "lightgreen";
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (Int32.Parse(liste[a].CIKIS.Replace(":", "")) < 1800)
-                                                    {
-                                                        col2 = "#FFCCCB";
-                                                    }
-                                                    else
-                                                    {
-                                                        col2 = "lightgreen";
-                                                    }
-                                                }
+                //                            t = "<td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].CIKIS + "</td></tr>";
+                //                        }
+                //                        else if (a == liste.Count - 1)
+                //                        {
+                //                            if (liste[a].CIKIS != "-")
+                //                            {
+                //                                if (currentTime.DayOfWeek == DayOfWeek.Saturday)
+                //                                {
+                //                                    if (Int32.Parse(liste[a].CIKIS.Replace(":", "")) < 1500)
+                //                                    {
+                //                                        col2 = "#FFCCCB";
+                //                                    }
+                //                                    else
+                //                                    {
+                //                                        col2 = "lightgreen";
+                //                                    }
+                //                                }
+                //                                else
+                //                                {
+                //                                    if (Int32.Parse(liste[a].CIKIS.Replace(":", "")) < 1800)
+                //                                    {
+                //                                        col2 = "#FFCCCB";
+                //                                    }
+                //                                    else
+                //                                    {
+                //                                        col2 = "lightgreen";
+                //                                    }
+                //                                }
 
-                                            }
-                                            t = t + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col2 + "'>" + liste[a].CIKIS + "</td></tr>";
-                                        }
-                                        else
-                                        {
+                //                            }
+                //                            t = t + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col2 + "'>" + liste[a].CIKIS + "</td></tr>";
+                //                        }
+                //                        else
+                //                        {
 
-                                            t = t + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].CIKIS + "</td></tr>";
-                                        }
-
-
-                                    }
-                                    body = body + t;
-                                }
-                                else
-                                {
-                                    if (liste[0].CIKIS != "-")
-                                    {
-                                        body = body + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[0].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col2 + "'>" + liste[0].CIKIS + "</td></tr>";
-                                    }
-                                    else
-                                    {
-                                        body = body + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[0].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>-</td></tr>";
-                                    }
-
-                                }
-                            }
+                //                            t = t + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>" + liste[a].CIKIS + "</td></tr>";
+                //                        }
 
 
+                //                    }
+                //                    body = body + t;
+                //                }
+                //                else
+                //                {
+                //                    if (liste[0].CIKIS != "-")
+                //                    {
+                //                        body = body + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[0].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col2 + "'>" + liste[0].CIKIS + "</td></tr>";
+                //                    }
+                //                    else
+                //                    {
+                //                        body = body + "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>" + liste[0].NAME + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:" + col + "'>" + liste[0].GIRIS + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white'>-</td></tr>";
+                //                    }
+
+                //                }
+                //            }
 
 
-                        }
-                        var img = NovaImzaModel.Imza;
-                        var table = "İyi akşamlar,</br></br>" + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek] + " günü 18:30 öncesi personel hareket raporudur:</br></br><table style='border: 1px solid #CCCCCC;border-collapse: collapse;'>" +
-                        "<tr><th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> İsim </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspGiriş Zamanı&nbsp</th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspÇıkış Zamanı&nbsp</th></tr>" + body + "</table></br></br>" + img;
+
+
+                //        }
+                //        var img = NovaImzaModel.Imza;
+                //        var table = "İyi akşamlar,</br></br>" + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek] + " günü 18:30 öncesi personel hareket raporudur:</br></br><table style='border: 1px solid #CCCCCC;border-collapse: collapse;'>" +
+                //        "<tr><th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> İsim </th>" +
+                //        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspGiriş Zamanı&nbsp</th>" +
+                //        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspÇıkış Zamanı&nbsp</th></tr>" + body + "</table></br></br>" + img;
                        
-                        string den = exec2[0].BCC.Substring(0, exec2[0].BCC.Length - 1);
-                        string den1 = exec2[0].CC;
-                        string den2 = exec2[0].TO;
-                        if (den1 != null)
-                        {
-                            mail.CC.Add(den1.Substring(0, exec2[0].BCC.Length - 1));
-                        }
-                        if (den2 != null)
-                        {
-                            mail.To.Add(den2.Substring(0, exec2[0].TO.Length - 1));
-                        }
+                //        string den = exec2[0].BCC.Substring(0, exec2[0].BCC.Length - 1);
+                //        string den1 = exec2[0].CC;
+                //        string den2 = exec2[0].TO;
+                //        if (den1 != null)
+                //        {
+                //            mail.CC.Add(den1.Substring(0, exec2[0].BCC.Length - 1));
+                //        }
+                //        if (den2 != null)
+                //        {
+                //            mail.To.Add(den2.Substring(0, exec2[0].TO.Length - 1));
+                //        }
 
-                        mail.Bcc.Add(den);
-                        mail.From = new MailAddress("sistem@efecegalvaniz.com");
-                        mail.Body = table;
-                        mail.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " PERSONEL HAREKET RAPORU";
-
-
-                        mail.IsBodyHtml = true;
-
-                        SmtpClient smtp = new System.Net.Mail.SmtpClient();
-                        smtp.Host = "192.168.2.13";
-                        smtp.UseDefaultCredentials = true;
-                        smtp.Send(mail);
-                    }
-                    catch (Exception e)
-                    {
-                        mail.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                        mail.From = new MailAddress("sistem@efecegalvaniz.com");
-                        mail.Body = e.Message;
-                        mail.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " PERSONEL HAREKET RAPORU";
+                //        mail.Bcc.Add(den);
+                //        mail.From = new MailAddress("sistem@efecegalvaniz.com");
+                //        mail.Body = table;
+                //        mail.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " PERSONEL HAREKET RAPORU";
 
 
-                        mail.IsBodyHtml = true;
+                //        mail.IsBodyHtml = true;
 
-                        SmtpClient smtp = new System.Net.Mail.SmtpClient();
-                        smtp.Host = "192.168.2.13";
-                        smtp.UseDefaultCredentials = true;
-                        smtp.Send(mail);
-                    }
+                //        SmtpClient smtp = new System.Net.Mail.SmtpClient();
+                //        smtp.Host = "192.168.2.13";
+                //        smtp.UseDefaultCredentials = true;
+                //        smtp.Send(mail);
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        mail.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                //        mail.From = new MailAddress("sistem@efecegalvaniz.com");
+                //        mail.Body = e.Message;
+                //        mail.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " PERSONEL HAREKET RAPORU";
+
+
+                //        mail.IsBodyHtml = true;
+
+                //        SmtpClient smtp = new System.Net.Mail.SmtpClient();
+                //        smtp.Host = "192.168.2.13";
+                //        smtp.UseDefaultCredentials = true;
+                //        smtp.Send(mail);
+                //    }
                     
-                }
+                //}
                 else if (currentTime.Hour == 18 && currentTime.Minute == 45 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday)
                 {
                     MailMessage mail = new MailMessage();
@@ -757,13 +756,14 @@ namespace SqlApi.Task
                     }
                     catch (Exception e)
                     {
-                        mail.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                        mail.From = new MailAddress("sistem@efecegalvaniz.com");
-                        mail.Body = e.Message;
-                        mail.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " MÜŞTERİ SİPARİŞİ KONTROL RAPORU";
+                        MailMessage mail1 = new MailMessage();
+                        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
+                        mail1.Body = e.Message;
+                        mail1.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " MÜŞTERİ SİPARİŞİ KONTROL RAPORU";
 
 
-                        mail.IsBodyHtml = true;
+                        mail1.IsBodyHtml = true;
 
                         SmtpClient smtp = new System.Net.Mail.SmtpClient();
                         smtp.Host = "192.168.2.13";
@@ -835,7 +835,7 @@ namespace SqlApi.Task
                    
 
                 }
-                else if(currentTime.Hour == 14 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
+                else if(currentTime.Hour == 11 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
                 {
                     OleDbConnection con;
                     OleDbCommand cmd;
@@ -865,8 +865,7 @@ namespace SqlApi.Task
 
                         }
                         con.Close();
-                        var mailList = string.Join(",", list.Select(x => x.MAIL));
-                        SENDMAIL(mailList);
+                        SENDMAIL(list, "yabanci");
                     }
                     catch (Exception e)
                     {
@@ -883,33 +882,61 @@ namespace SqlApi.Task
                     }
                    
                 }
+                else if (currentTime.Hour == 10 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
+                {
+
+                    OleDbConnection con;
+                    OleDbCommand cmd;
+                    OleDbDataReader dr;
+                    List<ExportExcelModel> list = new List<ExportExcelModel>();
+                    try
+                    {
+                        con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\192.168.2.3\ortak\SATIS\STOK_MAILING_LISTESI.xlsx; Extended Properties='Excel 12.0 xml;HDR=YES;READONLY=TRUE'");
+
+                        cmd = new OleDbCommand("Select * FROM [Sayfa1$A1:B]", con);
+                        con.Open();
+                        dr = cmd.ExecuteReader();
+
+                        while (dr.Read())
+                        {
+
+                            ExportExcelModel excel = new ExportExcelModel();
+                            if (dr["EMAIL"].ToString() != "")
+                            {
+                                excel.MAIL = dr["EMAIL"].ToString().Replace(",","").Replace("İ","i");
+                                list.Add(excel);
+                            }
+
+
+
+
+
+                        }
+                        con.Close();
+                        SENDMAIL(list, "Yerli");
+                    }
+                    catch (Exception e)
+                    {
+                        MailMessage mail1 = new MailMessage();
+                        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
+                        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
+                        smtp1.Host = "192.168.2.13";
+                        smtp1.UseDefaultCredentials = true;
+                        mail1.IsBodyHtml = true;
+                        mail1.Subject = "EFECE STOK LİSTE";
+                        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                        mail1.Body = e.Message;
+                        smtp1.Send(mail1);
+                    }
+
+                }
                 else
                 {
                     test = true;
                     CashClass.Clear(_memoryCache);
                 }
                
-                //if (currentTime.Minute % 2 == 0 && currentTime.Second == 0)
-                //{
-                //    _ = DetayliAktarAsync();
-                //    _ = StokAktarAsync();
-                //}
-
-                //var onlineusers = _context.VW_SESSION.Where(x => x.ACTIVITY_TYPE == "login").ToList();
-                //for (var i = 0; i < onlineusers.Count; i++)
-                //{
-                //    if (DateTime.Parse(onlineusers[i].LOG_DATETIME).AddHours(2) < currentTime)
-                //    {
-                //        LogInTBL item = new LogInTBL();
-                //        item.PLATFORM = onlineusers[i].PLATFORM;
-                //        item.LOG_DATETIME = DateTime.Parse(onlineusers[i].LOG_DATETIME).AddHours(2);
-                //        item.ACTIVITY_TYPE = "logout";
-                //        item.USER_ID = Int32.Parse(onlineusers[i].USER_ID.ToString());
-                //        item.USER_NAME = onlineusers[i].USER_NAME;
-                //        _context.TBL_USER_SESSION_LOG.Add(item);
-                //        _context.SaveChanges();
-                //    }
-                //}
+               
 
 
 
@@ -918,301 +945,7 @@ namespace SqlApi.Task
             return System.Threading.Tasks.Task.CompletedTask;
         }
 
-        private void DoWork(DateTime date)
-        {
-            MailMessage mail = new MailMessage();
-            try
-            {
-                string query2 = @" EXEC SP_SEND_MAIL 1";
-                List<MailModel> exec2 = null;
-                string sqldataSource2 = _configuration.GetConnectionString("Connn");
-                SqlDataReader sqlreader2;
-                using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
-                {
-                    mycon2.Open();
-                    using (SqlCommand myCommand1 = new SqlCommand(query2, mycon2))
-                    {
-                        sqlreader2 = myCommand1.ExecuteReader();
-                        exec2 = DataReaderMapToList<MailModel>(sqlreader2);
-                        sqlreader2.Close();
-                        mycon2.Close();
-                    }
-                }
-                List<MusteriModel> musteriList;
-                using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
-                {
-                    mycon2.Open();
-                    using (SqlCommand myCommand1 = new SqlCommand("Select * FROM TBL_MUSTERI WHERE PLASIYER<>'admin'", mycon2))
-                    {
-                        sqlreader2 = myCommand1.ExecuteReader();
-                        musteriList = DataReaderMapToList<MusteriModel>(sqlreader2);
-                        sqlreader2.Close();
-                        mycon2.Close();
-                    }
-                }
-                List<UserModel> users;
-                using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
-                {
-                    mycon2.Open();
-                    using (SqlCommand myCommand1 = new SqlCommand("Select * FROM TBL_USER_DATA", mycon2))
-                    {
-                        sqlreader2 = myCommand1.ExecuteReader();
-                        users = DataReaderMapToList<UserModel>(sqlreader2);
-                        sqlreader2.Close();
-                        mycon2.Close();
-                    }
-                }
-                List<MusteriUrunModel> urunler;
-                using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
-                {
-                    mycon2.Open();
-                    using (SqlCommand myCommand1 = new SqlCommand("Select * FROM TBL_MUSTERI_URUN_BILGI", mycon2))
-                    {
-                        sqlreader2 = myCommand1.ExecuteReader();
-                        urunler = DataReaderMapToList<MusteriUrunModel>(sqlreader2);
-                        sqlreader2.Close();
-                        mycon2.Close();
-                    }
-                }
-                List<MusteriRandevuModel> randevu;
-                using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
-                {
-                    mycon2.Open();
-                    using (SqlCommand myCommand1 = new SqlCommand("Select * FROM TBL_MUSTERI_RANDEVU", mycon2))
-                    {
-                        sqlreader2 = myCommand1.ExecuteReader();
-                        randevu = DataReaderMapToList<MusteriRandevuModel>(sqlreader2);
-                        sqlreader2.Close();
-                        mycon2.Close();
-                    }
-                }
-                var randevuplanlanan = randevu.Where(x => (DateTime)x.PLANLANAN_TARIH > date && (DateTime)x.PLANLANAN_TARIH < date.AddDays(7)).ToList();
-                var randevugerceklesen = randevu.Where(x => (DateTime)x.PLANLANAN_TARIH > date.AddDays(-7)).ToList();
-                var uruneklenen = urunler.Where(x => (DateTime)x.DEGISIKLIK_TARIHI > date.AddDays(-7)).ToList();
-                List<string> plasiyerler = new List<string>();
-
-                int GetWeekNumber(DateTime date)
-                {
-                    return (date.DayOfYear - GetWeekday(date.DayOfWeek) + 10) / 7;
-                }
-                int GetWeekday(DayOfWeek dayOfWeek)
-                {
-                    return dayOfWeek == DayOfWeek.Sunday ? 7 : (int)dayOfWeek;
-                }
-                Parallel.ForEach(musteriList, musteri =>
-                {
-                    var plasiyer = musteri.PLASIYER;
-                    if (!plasiyerler.Contains(plasiyer))
-                    {
-                        plasiyerler.Add(plasiyer);
-                    }
-                });
-                for (var j = 0; j < plasiyerler.Count; j++)
-                {
-                    var fullname = users.Where(x => x.USER_NAME == plasiyerler[j]).ToList();
-                    List<int> musteriIdler = new List<int>();
-                    var icerik = "";
-                    var icerik1 = "";
-                    var icerik2 = "";
-                    var icerik3 = "";
-                    //string subject = "CRM Raporu | " + GetWeekNumber(date) + ".Hafta | " + fullname[0].USER_FIRSTNAME + " " + fullname[0].USER_LASTNAME;
-                    string subject = "CRM Raporu | "+GetWeekNumber(date) +".Hafta | " + fullname[0].USER_FIRSTNAME + " " + fullname[0].USER_LASTNAME;
-                    var plMusteriList = musteriList.Where(x => x.PLASIYER == plasiyerler[j]).ToList();
-                    var plrandevuplanlanan = randevuplanlanan.Where(x => x.KAYIT_YAPAN_KULLANICI_ID == fullname[0].USER_ID).ToList();
-                    var plUrunList = uruneklenen.Where(x => x.KAYIT_YAPAN_KULLANICI == plasiyerler[j]).ToList();
-                    for (int a = 0; a < plMusteriList.Count; a++)
-                    {
-                        var musteriId = plMusteriList[a].MUSTERI_ID;
-                        if (!musteriIdler.Contains(musteriId))
-                        {
-                            try
-                            {
-
-                                musteriIdler.Add(musteriId);
-                            }
-                            catch (Exception e)
-                            {
-                                var error = e.Message;
-                            }
-                        }
-                        if (plMusteriList[a].KAYIT_TARIHI > date.AddDays(-7))
-                        {
-                            var tr = "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + plMusteriList[a].MUSTERI_ADI + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + plMusteriList[a].MUSTERI_IL + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + plMusteriList[a].MUSTERI_ILCE + " </td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + plMusteriList[a].MUSTERI_NOTU + " </td></tr>";
-                            icerik = icerik + tr;
-                        }
-
-                    }
-                    for (int a = 0; a < musteriIdler.Count; a++)
-                    {
-                        var f = randevuplanlanan.Where(x => x.MUSTERI_ID == musteriIdler[a]).ToList();
-
-                        if (f != null)
-                        {
-                            for (int b = 0; b < f.Count(); b++)
-                            {
-                                var ad = musteriList.Find(x => x.MUSTERI_ID == musteriIdler[a]).MUSTERI_ADI;
-                                if (f[b].GERCEKLESEN_TARIH == null)
-                                {
-                                    var tr = "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + ad + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + DateTime.Parse(f[b].PLANLANAN_TARIH.ToString()).ToString("dddd, dd MMMM yyyy HH:mm") + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + DateTime.Parse(f[b].KAYIT_TARIHI.ToString()).ToString("dddd, dd MMMM yyyy HH:mm") + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + f[b].RANDEVU_NOTU + " </td></tr>";
-                                    icerik1 = icerik1 + tr;
-                                }
-
-
-
-
-                            }
-
-                        }
-                        var e = randevugerceklesen.Where(x => x.MUSTERI_ID == musteriIdler[a]).ToList();
-
-                        if (e != null)
-                        {
-                            for (int b = 0; b < e.Count(); b++)
-                            {
-                                var ad = musteriList.Find(x => x.MUSTERI_ID == musteriIdler[a]).MUSTERI_ADI;
-                                if (e[b].GERCEKLESEN_TARIH != null)
-                                {
-                                    var tr = "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + ad + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + DateTime.Parse(e[b].PLANLANAN_TARIH.ToString()).ToString("dddd, dd MMMM yyyy HH:mm") + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + DateTime.Parse(e[b].GERCEKLESEN_TARIH.ToString()).ToString("dddd, dd MMMM yyyy HH:mm") + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + e[b].RANDEVU_NOTU + " </td></tr>";
-                                    icerik2 = icerik2 + tr;
-                                }
-
-
-
-
-                            }
-
-                        }
-
-                    }
-
-                    if (plUrunList.Count > 0)
-                    {
-                        for (int a = 0; a < plUrunList.Count; a++)
-                        {
-                            var ad = musteriList.Find(x => x.MUSTERI_ID == plUrunList[a].MUSTERI_ID).MUSTERI_ADI;
-                            var tr = "<tr><td style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + ad + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + plUrunList[a].URUN_GRUBU + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + Decimal.Parse(plUrunList[a].YILLIK_KULLANIM.ToString()).ToString("#,##0") + " " + plUrunList[a].OLCU_BIRIMI + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + DateTime.Parse(plUrunList[a].KAYIT_TARIHI.ToString()).ToString("dddd, dd MMMM yyyy HH:mm") + " </td><td  style='border: 1px solid #CCCCCC;border-collapse: collapse;'> " + DateTime.Parse(plUrunList[a].DEGISIKLIK_TARIHI.ToString()).ToString("dddd, dd MMMM yyyy HH:mm") + " </td></tr>";
-                            icerik3 = icerik3 + tr;
-
-                        }
-                    }
-
-                    var table1 = "";
-                    var table2 = "";
-                    var table3 = "";
-                    var table4 = "";
-                    var img = NovaImzaModel.Imza;
-                    if (icerik == "")
-                    {
-                        table1 = "<p>Geçtiğimiz hafta kaydedilen herhangi bir müşteri yoktur.</p>";
-                    }
-                    else
-                    {
-                        table1 = "<table style='border: 1px solid #CCCCCC;border-collapse: collapse;'>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Müşteri Adı </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Müşteri İl </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Müşteri İlçe </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Müşteri Notu </th>" + icerik + "</table></br></br></br>";
-                    }
-                    if (icerik1 == "")
-                    {
-                        table2 = "<p>Gelecek hafta için planlanmış herhangi bir ziyaret yoktur.</p>";
-                    }
-                    else
-                    {
-                        table2 = "<table style='border: 1px solid #CCCCCC;border-collapse: collapse;'>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Müşteri Adı </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Planlanan Tarih </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Kayıt Tarihi </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Randevu Notu </th>" + icerik1 + "</table>";
-                    }
-                    if (icerik2 == "")
-                    {
-                        table3 = "<p>Geçtiğimiz hafta için gerçekleşmiş herhangi bir ziyaret yoktur.</p>";
-                    }
-                    else
-                    {
-                        table3 = "<table style='border: 1px solid #CCCCCC;border-collapse: collapse;'>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Müşteri Adı </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Planlanan Tarih </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Gerçekleşme Tarihi </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Randevu Notu </th>" + icerik2 + "</table>";
-                    }
-                    if (icerik3 == "")
-                    {
-                        table4 = "<p>Geçtiğimiz hafta için eklenmiş veya düzenlenmiş herhangi bir ürün yoktur.</p>";
-                    }
-                    else
-                    {
-                        table4 = "<table style='border: 1px solid #CCCCCC;border-collapse: collapse;'>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Müşteri Adı </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Ürün Grubu </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Yıllık Kullanım </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Kayıt Tarihi </th>" +
-                        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> Düzenleme Tarihi </th>" + icerik3 + "</table>";
-                    }
-
-                    string body = "<h2>Geçtiğimiz Hafta Kaydedilen Müşteriler</h2>" +
-                             table1 +
-                            "<hr>" +
-                            "<h2>Geçtiğimiz Hafta Gerçekleşen Müşteri Ziyaretleri</h2>" +
-                            table3 +
-                            "<hr><h2>Geçtiğimiz Hafta Eklenen veya Düzenlenen Ürünler</h2>" +
-                            table4 +
-                            "<hr><h2>Gelecek Haftaya Planlanan Müşteri Ziyaretleri</h2>" +
-                            table2 +
-                            "</br></br></br>" + img;
-
-
-
-                    string den = exec2[0].BCC.Substring(0, exec2[0].BCC.Length - 1);
-                    mail.Bcc.Add(den);
-                    //mail.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                    //mail.Bcc.Add("ugurkonakci@efecegalvaniz.com");
-                    mail.From = new MailAddress("sistem@efecegalvaniz.com");
-                    mail.Body = body;
-                    mail.Subject = subject;
-
-
-                    mail.IsBodyHtml = true;
-
-                    SmtpClient smtp = new System.Net.Mail.SmtpClient();
-                    smtp.Host = "192.168.2.13";
-                    smtp.UseDefaultCredentials = true;
-                    if(icerik==""&& icerik1 == "" && icerik2 == "" && icerik3 == "")
-                    {
-                        
-                    }
-                    else
-                    {
-                        smtp.Send(mail);
-                    }
-
-                };
-            }
-            catch (Exception e)
-            {
-                MailMessage mail1 = new MailMessage();
-                mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                mail1.From = new MailAddress("sistem@efecegalvaniz.com");
-                mail1.Body = e.Message;
-                mail1.Subject = "HATA";
-
-
-                mail1.IsBodyHtml = true;
-
-                SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
-                smtp1.Host = "192.168.2.13";
-                smtp1.UseDefaultCredentials = true;
-                smtp1.Send(mail1);
-
-
-            }
-            
-           
-
-
-
-        }
+       
       
       
         public List<T> ConvertToList<T>(DataTable dt)
@@ -1241,24 +974,24 @@ namespace SqlApi.Task
             return System.Threading.Tasks.Task.CompletedTask;
         }
 
-       
-        class UserModel
+
+        public class UserModel
         {
             public int USER_ID { get; set; }
             public string USER_NAME { get; set; }
             public string USER_FIRSTNAME { get; set; }
             public string USER_LASTNAME { get; set; }
         }
-        class ContentModel
+        public class ContentModel
         {
             public string body { get; set; }
             public bool fromMe { get; set; }
         }
-        class FiyatKodModel
+        public class FiyatKodModel
         {
             public string FIYATKODU { get; set; }
         }
-        class FiyatKodModel2
+        public class FiyatKodModel2
         {
             public int SIRA_NO { get; set; }
             public string FIYATKODU { get; set; }
@@ -1723,7 +1456,7 @@ namespace SqlApi.Task
         #endregion
 
         #region ExportMail
-        public void SENDMAIL(string mailList)
+        public void SENDMAIL(List<ExportExcelModel> mailList,string tip)
         {
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress("sistem@efecegalvaniz.com");
@@ -1731,56 +1464,218 @@ namespace SqlApi.Task
             smtp.Host = "192.168.2.13";
             smtp.UseDefaultCredentials = true;
             mail.IsBodyHtml = true;
-            mail.Subject = "EFECE STOCK LIST";
-            try
-            {
-                string query = @"EXEC EXPORT_MAIL_STOCK";
+            
+           
                 
-                List<ExportMailModel> exec;
-                string sqldataSource = _configuration.GetConnectionString("Connn");
-                SqlDataReader sqlreader;
-                using (SqlConnection mycon = new SqlConnection(sqldataSource))
+
+                
+
+                
+               
+                if (tip == "Yerli")
                 {
-                    mycon.Open();
-                    using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                    string query = @"EXEC EXPORT_MAIL_STOCK 0";
+
+                    List<ExportMailModel> exec;
+                    string sqldataSource = _configuration.GetConnectionString("Connn");
+                    SqlDataReader sqlreader;
+                    using (SqlConnection mycon = new SqlConnection(sqldataSource))
                     {
-                        sqlreader = myCommand.ExecuteReader();
-                        exec = DataReaderMapToList<ExportMailModel>(sqlreader);
-                        sqlreader.Close();
-                        mycon.Close();
+                        mycon.Open();
+                        using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                        {
+                            sqlreader = myCommand.ExecuteReader();
+                            exec = DataReaderMapToList<ExportMailModel>(sqlreader);
+                            sqlreader.Close();
+                            mycon.Close();
+                        }
                     }
+                    byte[] file = GeneratePdfYerli(exec);
+                    Attachment att = new Attachment(new MemoryStream(file), "EFECE_STOK_LISTESI_" + DateTime.Now.ToShortDateString() + ".pdf");
+                    mail.Attachments.Add(att);
+
+                    mail.Body = "<p>Kıymetli iş ortaklarımız;</p><p>Haftalık güncel stok listemiz ektedir. Stoklarımızla ilgili talepleriniz için bizimle iletişime geçebilirsiniz.</p>" + "<p>Mail listemizden ayrılmak için <a href=\"mailto:satis@efecegalvaniz.com\">satis@efecegalvaniz.com</a> mail adresine talebinizi iletebilirsiniz.</p>" +
+                        "<p>Saygılarımızla,</p>" + NovaImzaModel.IsimsizImza;
+                    
+                    mail.Subject = "EFECE STOK LİSTESİ ("+ DateTime.Now.ToShortDateString()+")";
+                }
+                else
+                {
+                    string query = @"EXEC EXPORT_MAIL_STOCK 1";
+
+                    List<ExportMailModel> exec;
+                    string sqldataSource = _configuration.GetConnectionString("Connn");
+                    SqlDataReader sqlreader;
+                    using (SqlConnection mycon = new SqlConnection(sqldataSource))
+                    {
+                        mycon.Open();
+                        using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                        {
+                            sqlreader = myCommand.ExecuteReader();
+                            exec = DataReaderMapToList<ExportMailModel>(sqlreader);
+                            sqlreader.Close();
+                            mycon.Close();
+                        }
+                    }
+                    mail.Subject = "EFECE STOCK LIST (" + DateTime.Now.ToShortDateString()+")";
+                    byte[] file = GeneratePdf(exec);
+                    Attachment att = new Attachment(new MemoryStream(file), "EFECE_STOCK_LIST_" + DateTime.Now.ToShortDateString() + ".pdf");
+                    mail.Attachments.Add(att);
+
+                    mail.Body = "<p>Dear Partners;</p><p>Attached you can find our weekly stock list. Have a special inquiry? Please contact us.</p><p>If you no longer want to receive this list, please reply to <a href=\"mailto:export@efecegalvaniz.com\">export@efecegalvaniz.com</a>.</p><p>Kind Regards,</p>" + NovaImzaModel.ExportImza;
                 }
 
-                byte[] file = GeneratePdf(exec);
 
-                mail.Bcc.Add(mailList);
-                //mail.Bcc.Add("ergunozbudakli@efecegalvaniz.com");
 
-                Attachment att = new Attachment(new MemoryStream(file), "EFECE_STOCK_LIST_" + DateTime.Now.ToShortDateString() + ".pdf");
-                mail.Attachments.Add(att);
+                for(var  i = 0; i < mailList.Count; i++)
+                {
+                    mail.Bcc.Remove(mail.Bcc[0]);
+                    mail.Bcc.Add(mailList[i].MAIL);
+                try
+                {
+                    smtp.Send(mail);
+                }
+                catch (Exception e)
+                {
+                    MailMessage mail1 = new MailMessage();
+                    mail1.From = new MailAddress("sistem@efecegalvaniz.com");
+                    SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
+                    smtp1.Host = "192.168.2.13";
+                    smtp1.UseDefaultCredentials = true;
+                    mail1.IsBodyHtml = true;
+                    mail1.Subject = "EFECE STOK LİSTE";
+                    mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                    mail1.Body = "Mail " + mailList[i].MAIL + " adresine gönderilemedi.";
+                    smtp1.Send(mail1);
+                }
+                }
+                    
                 
-                mail.Body = "<p>Dear Partners;</p><p>Attached you can find our weekly stock list. Have a special inquiry? Please contact us.</p><p>If you no longer want to receive this list, please reply to <a href=\"mailto:export@efecegalvaniz.com\">export@efecegalvaniz.com</a>.</p><p>Kind Regards,</p>" + NovaImzaModel.ExportImza;
-
-               
-
                 
-                smtp.Send(mail);
-            }
-            catch (Exception e)
+           
+
+
+        }
+        public byte[] GeneratePdfYerli(List<ExportMailModel> data)
+        {
+            using (var memoryStream = new MemoryStream())
             {
-                MailMessage mail1 = new MailMessage();
-                mail1.From = new MailAddress("sistem@efecegalvaniz.com");
-                SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
-                smtp1.Host = "192.168.2.13";
-                smtp1.UseDefaultCredentials = true;
-                mail1.IsBodyHtml = true;
-                mail1.Subject = "EFECE STOCK LIST";
-                mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                mail1.Body=e.Message;
-                smtp1.Send(mail1);
+                using (var document = new iTextSharp.text.Document(iTextSharp.text.PageSize.A4, 20f, 20f, 80f, 40f))
+                {
+                    try
+                    {
+                        PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+                        writer.CloseStream = false;
+                        document.Open();
+                        PdfPTable table = new PdfPTable(6);
+                        table.TotalWidth = 575f;
+                        table.LockedWidth = true;
+                        BaseFont bF = BaseFont.CreateFont(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Fonts\\arial.ttf"), "windows-1254", true);
+                        var HeaderTextFont = new iTextSharp.text.Font(bF, 12f, iTextSharp.text.Font.BOLD);
+                        var TextFont = new iTextSharp.text.Font(bF, 10f, iTextSharp.text.Font.NORMAL);
+                        PdfPCell header = new PdfPCell(new Phrase("STOK ADI", HeaderTextFont));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.UseVariableBorders = true;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        //0=Left, 1=Centre, 2=Right
+                        table.AddCell(header);
+                        header = new PdfPCell(new Phrase("ÖZELLİKLER", HeaderTextFont));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        table.AddCell(header);
+                        header = new PdfPCell(new Phrase("UZUNLUK (MM)", HeaderTextFont));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        table.AddCell(header);
+                        header = new PdfPCell(new Phrase("PAKET ADEDİ", HeaderTextFont));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        table.AddCell(header);
+                        header = new PdfPCell(new Phrase("STOK MİKTARI (KG)", HeaderTextFont));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        table.AddCell(header);
+                        header = new PdfPCell(new Phrase("STOK MİKTARI (AD)", HeaderTextFont));
+                        header.FixedHeight = 40.0f;
+                        header.HorizontalAlignment = 1;
+                        header.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        header.BorderColor = BaseColor.LIGHT_GRAY;
+                        table.AddCell(header);
+                        for (int i = 0; i < data.Count; i++)
+                        {
+                            header = new PdfPCell(new Phrase(data[i].STOK_ADI,TextFont));
+                            header.HorizontalAlignment = 0;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                            header = new PdfPCell(new Phrase(data[i].MATERIAL, TextFont));
+                            header.HorizontalAlignment = 1;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                            header = new PdfPCell(new Phrase(data[i].LENGTH_MM.ToString(), TextFont));
+                            header.HorizontalAlignment = 1;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                            header = new PdfPCell(new Phrase(data[i].BUNDLE_SIZE_PCS.ToString("N0", CultureInfo.GetCultureInfo("tr-TR")), TextFont));
+                            header.HorizontalAlignment = 1;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                            header = new PdfPCell(new Phrase(data[i].STOCK_QTY_KG.ToString("N0", CultureInfo.GetCultureInfo("tr-TR")), TextFont));
+                            header.HorizontalAlignment = 2;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                            header = new PdfPCell(new Phrase(data[i].STOCK_QTY_PCS.ToString("N0", CultureInfo.GetCultureInfo("tr-TR")), TextFont));
+                            header.HorizontalAlignment = 2;
+                            header.BorderColor = BaseColor.LIGHT_GRAY;
+                            table.AddCell(header);
+                        }
+                        table.SetWidths(new float[] { 8.5f, 7.5f, 4.5f, 4.5f, 4.5f, 4.5f });
+                        var s = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\ExportMailPdf\\yerli.png");
+                        iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(s);
+                        jpg.Alignment = iTextSharp.text.Image.UNDERLYING;
+                        jpg.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
+                        jpg.SetAbsolutePosition(0, 0);
+                        writer.PageEvent = new ImageBackgroundHelper(jpg);
+                        
+                        document.Add(table);
+                        document.Add(new iTextSharp.text.Paragraph("AÇIKLAMALAR", HeaderTextFont));
+                        document.Add(new iTextSharp.text.Paragraph("* Stok miktarı anlıktır, değişkenlik gösterebilir.", TextFont));
+                        document.Add(new iTextSharp.text.Paragraph("* Özel ölçü talepleriniz için lütfen iletişime geçiniz.", TextFont));
+                        document.Add(new iTextSharp.text.Paragraph("* Ürün talepleriniz Efece kantarları esas alınarak gerçek ağırlıklarına göre faturalandırılır.", TextFont));
+                        document.Add(new iTextSharp.text.Paragraph("KISALTMALAR", HeaderTextFont));
+                        document.Add(new iTextSharp.text.Paragraph("* GLV: Galvaniz", TextFont));
+                        document.Add(new iTextSharp.text.Paragraph("* EGZ: Egzoz", TextFont));
+                        document.Close();
+                        byte[] docArray = memoryStream.ToArray();
+                        return docArray;
+                    }
+                    catch (Exception e)
+                    {
+                        MailMessage mail1 = new MailMessage();
+                        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
+                        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
+                        smtp1.Host = "192.168.2.13";
+                        smtp1.UseDefaultCredentials = true;
+                        mail1.IsBodyHtml = true;
+                        mail1.Subject = "EFECE STOCK LIST";
+                        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                        mail1.Body = e.Message;
+                        smtp1.Send(mail1);
+                    }
+                    
+                }
+
             }
-
-
+            return null;
         }
         public byte[] GeneratePdf(List<ExportMailModel> data)
         {
@@ -1893,13 +1788,12 @@ namespace SqlApi.Task
                         mail1.Body = e.Message;
                         smtp1.Send(mail1);
                     }
-                    
+
                 }
 
             }
             return null;
         }
-
         #endregion
 
         #region ExceldenVeriAlma

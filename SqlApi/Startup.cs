@@ -41,7 +41,7 @@ namespace SqlApi
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
 
         {
@@ -95,42 +95,26 @@ namespace SqlApi
             services.AddDbContext<UserContext>(options => options.UseSqlServer(ConnectionString));
             services.AddControllersWithViews().AddNewtonsoftJson(options=>options.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore).AddNewtonsoftJson(options=>options.SerializerSettings.ContractResolver=new DefaultContractResolver());
             services.AddControllers();
-            services.Configure<MongoDbSettings>(Configuration.GetSection("MongoDB"));
+            
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseResponseCompression();
             app.UseResponseCaching();
-            /*app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
+         
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });*/
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            // Enable middleware to serve generated Swagger as a JSON endpoint
             app.UseSwagger();
 
             app.UseSwaggerUI(options => {
                 options.DocumentTitle = "NOVA_API";
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "NOVA_API");
             });
-            //app.UseIPFilter();
+            
             app.UseCors("AllowOrigin");
             app.UseCors(bldr => bldr.WithOrigins("http://192.168.2.13:80").AllowAnyMethod()
    .AllowAnyHeader().AllowAnyOrigin());
