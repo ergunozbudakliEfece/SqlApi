@@ -835,7 +835,7 @@ namespace SqlApi.Task
                    
 
                 }
-                else if(currentTime.Hour == 11 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
+                else if(currentTime.Hour == 11 && currentTime.Minute == 00 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
                 {
                     OleDbConnection con;
                     OleDbCommand cmd;
@@ -851,18 +851,12 @@ namespace SqlApi.Task
 
                         while (dr.Read())
                         {
-
                             ExportExcelModel excel = new ExportExcelModel();
                             if (dr["email"].ToString() != "")
                             {
                                 excel.MAIL = dr["email"].ToString();
                                 list.Add(excel);
                             }
-                            
-
-
-
-
                         }
                         con.Close();
                         SENDMAIL(list, "yabanci");
@@ -882,54 +876,54 @@ namespace SqlApi.Task
                     }
                    
                 }
-                else if (currentTime.Hour == 10 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
-                {
+                //else if (currentTime.Hour == 10 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
+                //{
 
-                    OleDbConnection con;
-                    OleDbCommand cmd;
-                    OleDbDataReader dr;
-                    List<ExportExcelModel> list = new List<ExportExcelModel>();
-                    try
-                    {
-                        con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\192.168.2.3\ortak\SATIS\STOK_MAILING_LISTESI.xlsx; Extended Properties='Excel 12.0 xml;HDR=YES;READONLY=TRUE'");
+                //    OleDbConnection con;
+                //    OleDbCommand cmd;
+                //    OleDbDataReader dr;
+                //    List<ExportExcelModel> list = new List<ExportExcelModel>();
+                //    try
+                //    {
+                //        con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\192.168.2.3\ortak\SATIS\STOK_MAILING_LISTESI.xlsx; Extended Properties='Excel 12.0 xml;HDR=YES;READONLY=TRUE'");
 
-                        cmd = new OleDbCommand("Select * FROM [Sayfa1$A1:B]", con);
-                        con.Open();
-                        dr = cmd.ExecuteReader();
+                //        cmd = new OleDbCommand("Select * FROM [Sayfa1$A1:B]", con);
+                //        con.Open();
+                //        dr = cmd.ExecuteReader();
 
-                        while (dr.Read())
-                        {
+                //        while (dr.Read())
+                //        {
 
-                            ExportExcelModel excel = new ExportExcelModel();
-                            if (dr["EMAIL"].ToString() != "")
-                            {
-                                excel.MAIL = dr["EMAIL"].ToString().Replace(",","").Replace("İ","i");
-                                list.Add(excel);
-                            }
-
-
+                //            ExportExcelModel excel = new ExportExcelModel();
+                //            if (dr["EMAIL"].ToString() != "")
+                //            {
+                //                excel.MAIL = dr["EMAIL"].ToString().Replace(",","").Replace("İ","i");
+                //                list.Add(excel);
+                //            }
 
 
 
-                        }
-                        con.Close();
-                        SENDMAIL(list, "Yerli");
-                    }
-                    catch (Exception e)
-                    {
-                        MailMessage mail1 = new MailMessage();
-                        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
-                        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
-                        smtp1.Host = "192.168.2.13";
-                        smtp1.UseDefaultCredentials = true;
-                        mail1.IsBodyHtml = true;
-                        mail1.Subject = "EFECE STOK LİSTE";
-                        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                        mail1.Body = e.Message;
-                        smtp1.Send(mail1);
-                    }
 
-                }
+
+                //        }
+                //        con.Close();
+                //        SENDMAIL(list, "Yerli");
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        MailMessage mail1 = new MailMessage();
+                //        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
+                //        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
+                //        smtp1.Host = "192.168.2.13";
+                //        smtp1.UseDefaultCredentials = true;
+                //        mail1.IsBodyHtml = true;
+                //        mail1.Subject = "EFECE STOK LİSTE";
+                //        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                //        mail1.Body = e.Message;
+                //        smtp1.Send(mail1);
+                //    }
+
+                //}
                 else
                 {
                     test = true;
@@ -1529,7 +1523,7 @@ namespace SqlApi.Task
 
                 for(var  i = 0; i < mailList.Count; i++)
                 {
-                    mail.Bcc.Remove(mail.Bcc[0]);
+                    mail.Bcc.Clear();
                     mail.Bcc.Add(mailList[i].MAIL);
                 try
                 {
