@@ -33,7 +33,7 @@ namespace SqlApi.Controllers
 
             string query = @"SELECT * FROM TBLURETHAT WITH(NOLOCK)";
 
-            string sqldataSource = _configuration.GetConnectionString("Con");
+            string sqldataSource = _configuration.GetConnectionString("Conn");
             SqlDataReader sqlreader;
             using (SqlConnection mycon = new SqlConnection(sqldataSource))
             {

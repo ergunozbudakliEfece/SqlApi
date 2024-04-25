@@ -79,6 +79,44 @@ namespace SqlApi.Controllers
 
             return new JsonResult(table);
         }
+        [HttpPost("planlama/update")]
+        public string PlanlamaUpd(List<PlanlamaModel> list)
+        {
+            try
+            {
+                for (var i = 0; i < list.Count; i++)
+                {
+                    string query = @"SP_NOVA_ISEMRI_PLAN_UPD '" + list[i].ISEMRINO + "','" + list[i].TARIH + "','" + list[i].SAAT + "'";
+
+                    string sqldataSource = _configuration.GetConnectionString("Connn");
+                    SqlDataReader sqlreader;
+                    using (SqlConnection mycon = new SqlConnection(sqldataSource))
+                    {
+                        mycon.Open();
+                        using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                        {
+                            sqlreader = myCommand.ExecuteReader();
+                            sqlreader.Close();
+                            mycon.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                return "BAŞARISIZ";
+            }
+            
+            
+
+            return "BAŞARILI";
+        }
+        public class PlanlamaModel { 
+            public string ISEMRINO { get; set; }
+            public string TARIH { get; set; }
+            public string SAAT { get; set; }
+        }
         [HttpGet("hesapla/{seri}/{miktar}")]
         public JsonResult Hesapla(string seri,int miktar)
         {
@@ -348,6 +386,32 @@ namespace SqlApi.Controllers
 
 
             string query = @"EXEC NOVA_SP_SERI_BAKIYE '"+seri+"',"+depo;
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+
+            return new JsonResult(table);
+        }
+        [HttpGet("otoseri")]
+        public JsonResult OtoSeri()
+        {
+
+
+            DataTable table = new DataTable();
+
+
+            string query = @"EXEC SP_NOVA_OTOSERIURET";
 
             string sqldataSource = _configuration.GetConnectionString("Connn");
             SqlDataReader sqlreader;
