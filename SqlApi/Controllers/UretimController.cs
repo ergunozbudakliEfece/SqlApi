@@ -207,6 +207,26 @@ namespace SqlApi.Controllers
             
             return new JsonResult(table);
         }
+        [HttpGet("kaynak/{date_range_1}/{date_range_2}")]
+        public JsonResult GetUretimKaynak(string date_range_1, string date_range_2)
+        {
+            DataTable table = new DataTable();
+            string query = @$"EXEC SP_URT_KAYNAK_PLANLAMA '{date_range_1}', '{date_range_2}'";
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
         public class SeriNoModal
         {
             public string SERI_NO { get; set; }
