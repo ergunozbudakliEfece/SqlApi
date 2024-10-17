@@ -227,6 +227,46 @@ namespace SqlApi.Controllers
             }
             return new JsonResult(table);
         }
+        [HttpGet("kaynak2")]
+        public JsonResult GetUretimKaynak()
+        {
+            DataTable table = new DataTable();
+            string query = @$"EXEC SP_URT_KAYNAK_PLANLAMA2";
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
+        [HttpGet("fiatbul/{seri}")]
+        public JsonResult GetFiatlar(string seri)
+        {
+            DataTable table = new DataTable();
+            string query = @$"SELECT STHAR_NF,STHAR_BF,STHAR_DOVFIAT,STHAR_DOVTIP FROM EFECE2023..TBLSTHAR WITH(NOLOCK)WHERE INCKEYNO=(SELECT STRA_INC FROM EFECE2023..TBLSERITRA WITH(NOLOCK) WHERE SIRA_NO=(SELECT MIN(SIRA_NO) FROM EFECE2023..TBLSERITRA WITH(NOLOCK) WHERE SERI_NO='" +seri+"'))";
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
         public class SeriNoModal
         {
             public string SERI_NO { get; set; }

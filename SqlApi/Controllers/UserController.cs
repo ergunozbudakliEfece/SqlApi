@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace SqlApi.Controllers
@@ -85,7 +86,29 @@ namespace SqlApi.Controllers
            
             return await _context.TBL_USER_AUTH.Where(x=>x.USER_ID==id).ToListAsync();
         }
+        [HttpGet("usernames")]
+        public JsonResult GetAUserByNames()
+        {
+            DataTable table = new DataTable();
 
+
+            string query = @"SELECT USER_ID,USER_NAME FROM TBL_USER_DATA WHERE ACTIVE=1";
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
 
         [HttpPut("auth/{id}/{module}")]
         public ActionResult UptAuth(int id,int module, [FromBody] UserAuth userauth)

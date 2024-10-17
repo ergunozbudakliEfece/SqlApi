@@ -27,6 +27,14 @@ namespace SqlApi.Controllers
         {
             _configuration = configuration;
         }
+        [HttpGet("restart")]
+        public IActionResult Restart()
+        {
+            var appManager = ApplicationManager.Load();
+            appManager.Restart();
+
+            return Content("restarted");
+        }
         [HttpGet("{tip}")]
         public JsonResult GET(string tip)
         {
@@ -53,6 +61,7 @@ namespace SqlApi.Controllers
 
             return new JsonResult(table);
         }
+       
         [HttpGet("hi/{depo}")]
         public JsonResult Hesapla(string depo)
         {
@@ -78,6 +87,31 @@ namespace SqlApi.Controllers
             }
 
             return new JsonResult(table);
+        }
+        [HttpGet("planlama/{hat}")]
+        public object GETPlan(string hat)
+        {
+
+
+            DataTable table = new DataTable();
+
+
+            string query = @"EXEC SP_NOVA_ISEMRI_PLAN_SEL '"+hat+"'";
+            string sqldataSource = _configuration.GetConnectionString("Connn")!;
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+
+            return DataTableToJSON(table);
         }
         [HttpPost("planlama/update")]
         public string PlanlamaUpd(List<PlanlamaModel> list)
@@ -111,6 +145,119 @@ namespace SqlApi.Controllers
             
 
             return "BAŞARILI";
+        }
+        [HttpPost("planlama/abstract/update")]
+        public string AbstractUpd(List<AbstractModel> list)
+        {
+            try
+            {
+                for (var i = 0; i < list.Count; i++)
+                {
+                    string query = @"UPDATE TBL_NOVA_PLANLANAN_IE SET PLANLANAN_TARIH='"+list[0].PLANLANAN_TARIH+"',PLANLANAN_SAAT='" + list[0].PLANLANAN_SAAT + "' WHERE STOK_KODU='" + list[0].STOK_KODU + "'";
+
+                    string sqldataSource = _configuration.GetConnectionString("Connn");
+                    SqlDataReader sqlreader;
+                    using (SqlConnection mycon = new SqlConnection(sqldataSource))
+                    {
+                        mycon.Open();
+                        using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                        {
+                            sqlreader = myCommand.ExecuteReader();
+                            sqlreader.Close();
+                            mycon.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                return "BAŞARISIZ";
+            }
+
+
+
+            return "BAŞARILI";
+        }
+        public class AbstractModel
+        {
+            public string STOK_KODU {  get; set; }
+            public string PLANLANAN_TARIH {  get; set; }
+            public string PLANLANAN_SAAT { get; set; }
+        }
+        [HttpPost("planlama/insert")]
+        public string PlanlamaIns(List<InsertPlanModel> list)
+        {
+            try
+            {
+                for (var i = 0; i < list.Count; i++)
+                {
+                    string query = @"  INSERT INTO TBL_NOVA_PLANLANAN_IE(STOK_KODU,KAYIT_TARIHI,PLANLANAN_TARIH,MIKTAR1,MIKTAR2,KAYIT_YAPAN_ID,HAT_KODU) VALUES('" + list[0].STOK_KODU + "','" + list[0].KAYIT_TARIHI +"','"+ list[0].PLANLANAN_TARIH + "','" + list[0].MIKTAR1 +"','"+ list[0].MIKTAR2 + "','"+ list[0].KAYIT_YAPAN_ID + "','" + list[0].HAT_KODU +"')";
+
+                    string sqldataSource = _configuration.GetConnectionString("Connn");
+                    SqlDataReader sqlreader;
+                    using (SqlConnection mycon = new SqlConnection(sqldataSource))
+                    {
+                        mycon.Open();
+                        using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                        {
+                            sqlreader = myCommand.ExecuteReader();
+                            sqlreader.Close();
+                            mycon.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                return "BAŞARISIZ";
+            }
+
+
+
+            return "BAŞARILI";
+        }
+        [HttpPost("planlama/delete/{mamul}")]
+        public string PlanlamaDel(string mamul)
+        {
+            try
+            {
+               
+                    string query = @"DELETE FROM TBL_NOVA_PLANLANAN_IE WHERE STOK_KODU='"+mamul+"'";
+
+                    string sqldataSource = _configuration.GetConnectionString("Connn");
+                    SqlDataReader sqlreader;
+                    using (SqlConnection mycon = new SqlConnection(sqldataSource))
+                    {
+                        mycon.Open();
+                        using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                        {
+                            sqlreader = myCommand.ExecuteReader();
+                            sqlreader.Close();
+                            mycon.Close();
+                        }
+                    }
+                
+            }
+            catch (Exception)
+            {
+
+                return "BAŞARISIZ";
+            }
+
+
+
+            return "BAŞARILI";
+        }
+        public class InsertPlanModel {
+            public string STOK_KODU { get; set; }
+            public string KAYIT_TARIHI { get; set; }
+            public string PLANLANAN_TARIH { get; set; }
+            public int MIKTAR1 { get; set; }
+            public int MIKTAR2 { get; set; }
+            public int KAYIT_YAPAN_ID { get; set; }
+            public string HAT_KODU { get; set; }
         }
         public class PlanlamaModel { 
             public string ISEMRINO { get; set; }
@@ -218,9 +365,7 @@ namespace SqlApi.Controllers
         public object GetSeriRehber()
         {
 
-
             DataTable table = new DataTable();
-
 
             string query = @"EXEC SP_SERI_REHBER";
 
@@ -238,7 +383,7 @@ namespace SqlApi.Controllers
                 }
             }
 
-            return DataTableToJSON(table);
+            return JsonConvert.SerializeObject(table);
         }
         public static object DataTableToJSON(DataTable table)
         {

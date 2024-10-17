@@ -37,7 +37,7 @@ namespace SqlApi.Controllers
             try
             {
                 string query1 = @"EXEC NOVA_DETAYSIZ_MSIP_E '"+tip+"'";
-                List<DetayliSipDetaysizModel> stoklist = null;
+                List<DetayliSipIhracatDetaysizModel> stoklist = null;
                 string sqldataSource1 = _configuration.GetConnectionString("Connn");
                 SqlDataReader sqlreader1;
                 using (SqlConnection mycon1 = new SqlConnection(sqldataSource1))
@@ -46,7 +46,7 @@ namespace SqlApi.Controllers
                     using (SqlCommand myCommand1 = new SqlCommand(query1, mycon1))
                     {
                         sqlreader1 = myCommand1.ExecuteReader();
-                        stoklist = DataReaderMapToList<DetayliSipDetaysizModel>(sqlreader1);
+                        stoklist = DataReaderMapToList<DetayliSipIhracatDetaysizModel>(sqlreader1);
                         sqlreader1.Close();
                         mycon1.Close();
                     }

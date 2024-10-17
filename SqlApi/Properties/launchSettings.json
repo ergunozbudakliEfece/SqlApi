@@ -15,7 +15,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://192.168.2.168:81"
+      "applicationUrl": "http://192.168.2.209:99"
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",

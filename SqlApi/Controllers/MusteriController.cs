@@ -3,9 +3,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using SqlApi.Models;
 using System;
 using System.Collections;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,18 +23,37 @@ namespace SqlApi.Controllers
         private readonly FavContext _context2;
         private readonly StokContext _context3;
         private readonly IConfiguration _configuration;
-        public MusteriController(UserContext context, FavContext context2, StokContext context3)
+        public MusteriController(UserContext context, FavContext context2, StokContext context3, IConfiguration configuration)
         {
             _context = context;
             _context2 = context2;
             _context3 = context3;
+            _configuration=configuration;
         }
 
         [HttpGet]
         [Authorize]
         public IEnumerable GetAll()
         {
-            return _context.TBL_MUSTERI.ToList();
+            DataTable table = new DataTable();
+
+            string query = @"SELECT MUSTERI_ID,MUSTERI_ADI,MUSTERI_IL,MUSTERI_ILCE,MUSTERI_MAHALLE,MUSTERI_ADRES,MUSTERI_TEL1,MUSTERI_TEL2,MUSTERI_MAIL,MUSTERI_SEKTOR AS MUSTERI_SEKTOR_ID,MUSTERI_SEKTOR=(SELECT SECTOR_NAME FROM NOVA_EFECE..TBL_SECTORS WHERE SECTOR_ID=MUSTERI_SEKTOR),MUSTERI_SEKTOR_DIGER,MUSTERI_NITELIK,MUSTERI_NITELIK_DIGER, MUSTERI_NOTU,ILK_KAYIT_YAPAN,KAYIT_YAPAN_KULLANICI, KAYIT_TARIHI,DUZELTME_YAPAN_KULLANICI,DUZELTME_TARIHI,FIRMA_YETKILISI,PLASIYER FROM NOVA..TBL_MUSTERI";
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+
+            return JsonConvert.SerializeObject(table);
         }
         [HttpGet("plasiyerrandevu/{plasiyer}")]
         public IEnumerable GetRandevuS(int plasiyer)
@@ -290,7 +312,30 @@ namespace SqlApi.Controllers
             _context.SaveChanges();
             return new NoContentResult();
         }
+        [HttpGet("sektorler")]
+        public object GetSeektorler()
+        {
 
+            DataTable table = new DataTable();
+
+            string query = @"SELECT * FROM NOVA_EFECE..TBL_SECTORS";
+
+            string sqldataSource = _configuration.GetConnectionString("Connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+
+            return JsonConvert.SerializeObject(table);
+        }
 
     }
 }

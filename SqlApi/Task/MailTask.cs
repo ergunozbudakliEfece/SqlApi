@@ -30,6 +30,7 @@ using OfficeOpenXml;
 using iTextSharp.xmp.impl;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Data.OleDb;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SqlApi.Task
 {
@@ -71,11 +72,11 @@ namespace SqlApi.Task
                     day2 = 0;
                 }
 
-                if (currentTime.DayOfWeek == DayOfWeek.Saturday && currentTime.Hour == 15 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.Millisecond == 0)
+                if (currentTime.DayOfWeek == DayOfWeek.Friday && currentTime.Hour == 19 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond == 0)
                 {
 
                     Singleton fromsingleton = Singleton.GetInstance();
-                    fromsingleton.DoWork(currentTime,_configuration);
+                    fromsingleton.DoWork(currentTime, _configuration);
 
                 }
                 //else if (currentTime.Hour == 8 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond==0 && currentTime.DayOfWeek != DayOfWeek.Sunday)
@@ -246,7 +247,7 @@ namespace SqlApi.Task
                 //        "<tr><th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> İsim </th>" +
                 //        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspGiriş Zamanı&nbsp</th>" +
                 //        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspÇıkış Zamanı&nbsp</th></tr>" + body + "</table>" + img;
-                        
+
                 //        string den = exec2[0].BCC.Substring(0, exec2[0].BCC.Length - 1);
                 //        string den1 = exec2[0].CC;
                 //        string den2 = exec2[0].TO;
@@ -289,7 +290,7 @@ namespace SqlApi.Task
                 //        smtp.UseDefaultCredentials = true;
                 //        smtp.Send(mail);
                 //    }
-                   
+
                 //}
                 //else if ((currentTime.Hour == 18 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday) || (currentTime.Hour == 15 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek == DayOfWeek.Saturday))
                 //{
@@ -441,7 +442,7 @@ namespace SqlApi.Task
                 //        "<tr><th style='border: 1px solid #CCCCCC;border-collapse: collapse;'> İsim </th>" +
                 //        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspGiriş Zamanı&nbsp</th>" +
                 //        "<th style='border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspÇıkış Zamanı&nbsp</th></tr>" + body + "</table></br></br>" + img;
-                       
+
                 //        string den = exec2[0].BCC.Substring(0, exec2[0].BCC.Length - 1);
                 //        string den1 = exec2[0].CC;
                 //        string den2 = exec2[0].TO;
@@ -482,9 +483,9 @@ namespace SqlApi.Task
                 //        smtp.UseDefaultCredentials = true;
                 //        smtp.Send(mail);
                 //    }
-                    
+
                 //}
-                else if (currentTime.Hour == 18 && currentTime.Minute == 45 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday)
+                else if (currentTime.Hour == 18 && currentTime.Minute == 45 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday)
                 {
                     MailMessage mail = new MailMessage();
                     try
@@ -726,7 +727,7 @@ namespace SqlApi.Task
                         "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspFİYAT DÖVİZ TİPİ&nbsp</th>" +
                         "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspLİSTE FİYATI TL KARŞILIĞI&nbsp</th></tr></thead><tbody>"
                         + body + "</tbody></table>" + img;
-                        
+
                         string den = exec2[0].BCC.Substring(0, exec2[0].BCC.Length - 1);
                         //string den1 = exec2[0].CC;
                         //string den2 = exec2[0].TO;
@@ -770,7 +771,7 @@ namespace SqlApi.Task
                         smtp.UseDefaultCredentials = true;
                         smtp.Send(mail);
                     }
-                    
+
                 }
                 else if (currentTime.Hour == 17 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.Millisecond == 0)
                 {
@@ -801,6 +802,8 @@ namespace SqlApi.Task
                         mail.Bcc.Add("ergunozbudakli@efecegalvaniz.com");
                         mail.Bcc.Add("dincersipka@efecegalvaniz.com");
                         mail.Bcc.Add("muratruzgar@efecegalvaniz.com");
+                        mail.Bcc.Add("alidonmez@efecegalvaniz.com");
+                        mail.Bcc.Add("onurcengiz@efecegalvaniz.com");
                         mail.From = new MailAddress("sistem@efecegalvaniz.com");
                         mail.Body = body + img;
                         mail.Subject = "ÜRETİM RAPORU " + currentTime.ToString("dd.MM.yyyy");
@@ -832,10 +835,10 @@ namespace SqlApi.Task
                         smtp.Send(mail);
 
                     }
-                   
+
 
                 }
-                else if(currentTime.Hour == 11 && currentTime.Minute == 00 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
+                else if (currentTime.Hour == 11 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
                 {
                     OleDbConnection con;
                     OleDbCommand cmd;
@@ -874,62 +877,63 @@ namespace SqlApi.Task
                         mail1.Body = e.Message;
                         smtp1.Send(mail1);
                     }
-                   
+
                 }
-                //else if (currentTime.Hour == 10 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
-                //{
-
-                //    OleDbConnection con;
-                //    OleDbCommand cmd;
-                //    OleDbDataReader dr;
-                //    List<ExportExcelModel> list = new List<ExportExcelModel>();
-                //    try
-                //    {
-                //        con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\192.168.2.3\ortak\SATIS\STOK_MAILING_LISTESI.xlsx; Extended Properties='Excel 12.0 xml;HDR=YES;READONLY=TRUE'");
-
-                //        cmd = new OleDbCommand("Select * FROM [Sayfa1$A1:B]", con);
-                //        con.Open();
-                //        dr = cmd.ExecuteReader();
-
-                //        while (dr.Read())
-                //        {
-
-                //            ExportExcelModel excel = new ExportExcelModel();
-                //            if (dr["EMAIL"].ToString() != "")
-                //            {
-                //                excel.MAIL = dr["EMAIL"].ToString().Replace(",","").Replace("İ","i");
-                //                list.Add(excel);
-                //            }
-
-
-
-
-
-                //        }
-                //        con.Close();
-                //        SENDMAIL(list, "Yerli");
-                //    }
-                //    catch (Exception e)
-                //    {
-                //        MailMessage mail1 = new MailMessage();
-                //        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
-                //        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
-                //        smtp1.Host = "192.168.2.13";
-                //        smtp1.UseDefaultCredentials = true;
-                //        mail1.IsBodyHtml = true;
-                //        mail1.Subject = "EFECE STOK LİSTE";
-                //        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                //        mail1.Body = e.Message;
-                //        smtp1.Send(mail1);
-                //    }
-
-                //}
-                else
+                else if (currentTime.Hour == 10 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
                 {
-                    test = true;
-                    CashClass.Clear(_memoryCache);
+
+                    OleDbConnection con;
+                    OleDbCommand cmd;
+                    OleDbDataReader dr;
+                    List<ExportExcelModel> list = new List<ExportExcelModel>();
+                    try
+                    {
+                        con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\192.168.2.3\ortak\SATIS\STOK_MAILING_LISTESI.xlsx; Extended Properties='Excel 12.0 xml;HDR=YES;READONLY=TRUE'");
+
+                        cmd = new OleDbCommand("Select * FROM [Sayfa1$A1:B]", con);
+                        con.Open();
+                        dr = cmd.ExecuteReader();
+
+                        while (dr.Read())
+                        {
+
+                            ExportExcelModel excel = new ExportExcelModel();
+                            if (dr["EMAIL"].ToString() != "")
+                            {
+                                excel.MAIL = dr["EMAIL"].ToString().Replace(",", "").Replace("İ", "i");
+                                list.Add(excel);
+                            }
+
+                        }
+                        con.Close();
+                        
+                        SENDMAIL(list, "Yerli");
+                    }
+                    catch (Exception e)
+                    {
+                        MailMessage mail1 = new MailMessage();
+                        mail1.From = new MailAddress("info@efecegalvaniz.com");
+                        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
+                        smtp1.Host = "192.168.2.13";
+                        smtp1.UseDefaultCredentials = true;
+                        mail1.IsBodyHtml = true;
+                        mail1.Subject = "EFECE STOK LİSTE";
+                        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                        mail1.Body = e.Message;
+                        smtp1.Send(mail1);
+                    }
+
                 }
-               
+                else if (currentTime.Hour == 19 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    Singleton fromsingleton = Singleton.GetInstance();
+                    fromsingleton.StokBakiye(currentTime, _configuration);
+                }
+               else if(currentTime.Hour == 7 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
+                {
+                    Singleton fromsingleton = Singleton.GetInstance();
+                    fromsingleton.AcikMsip(currentTime, _configuration);
+                }
                
 
 
@@ -939,8 +943,30 @@ namespace SqlApi.Task
             return System.Threading.Tasks.Task.CompletedTask;
         }
 
-       
-      
+        
+        public class StokKontrolModel
+        {
+            public string STOK_KODU { get; set; }
+            public string STOK_ADI { get; set; }
+            //public string GRUP_ISIM { get; set; }
+            public string OLCU_BIRIMI { get; set; }
+            public string OLCU_BIRIMI2 { get; set; }
+            public decimal BAKIYE1 { get; set; }
+            public decimal BAKIYE2 { get; set; }
+            public decimal SATISA_HAZIR_BAKIYE1 { get; set; }
+            public decimal SATISA_HAZIR_BAKIYE2 { get; set; }
+            public decimal BEKL_IE_MIKTAR1 { get; set; }
+            public decimal BEKL_IE_MIKTAR2 { get; set; }
+            public decimal BEKLEYEN_SIPARIS1 { get; set; }
+            public decimal BEKLEYEN_SIPARIS2 { get; set; }
+            public decimal FAB_STOK_MIK1 { get; set; }
+            public decimal FAB_STOK_MIK2 { get; set; }
+            public string? SSIP_MIKTAR { get; set; }
+            public string? SSIP_TESLIM_MIKTAR { get; set; }
+            public string? SSIP_BAKIYE { get; set; }
+            public decimal ASGARI_STOK { get; set; }
+            public decimal ORAN { get; set; }
+        }
       
         public List<T> ConvertToList<T>(DataTable dt)
         {
@@ -1458,10 +1484,10 @@ namespace SqlApi.Task
             smtp.Host = "192.168.2.13";
             smtp.UseDefaultCredentials = true;
             mail.IsBodyHtml = true;
-            
-           
-                
 
+
+
+            var List = new List<string>();
                 
 
                 
@@ -1488,7 +1514,7 @@ namespace SqlApi.Task
                     Attachment att = new Attachment(new MemoryStream(file), "EFECE_STOK_LISTESI_" + DateTime.Now.ToShortDateString() + ".pdf");
                     mail.Attachments.Add(att);
 
-                    mail.Body = "<p>Kıymetli iş ortaklarımız;</p><p>Haftalık güncel stok listemiz ektedir. Stoklarımızla ilgili talepleriniz için bizimle iletişime geçebilirsiniz.</p>" + "<p>Mail listemizden ayrılmak için <a href=\"mailto:satis@efecegalvaniz.com\">satis@efecegalvaniz.com</a> mail adresine talebinizi iletebilirsiniz.</p>" +
+                    mail.Body = "<p>Kıymetli iş ortaklarımız;</p><p>Haftalık güncel stok listemiz ektedir. Stoklarımızla ilgili talepleriniz için <a href=\"mailto:satis@efecegalvaniz.com\">satis@efecegalvaniz.com</a> e-posta adresi üzerinden bizimle iletişime geçebilirsiniz.</p><p>Mail listemizden ayrılmak için <a href=\"mailto:satis@efecegalvaniz.com\">satis@efecegalvaniz.com</a> e-posta adresine talebinizi iletebilirsiniz.</p><p><u>Dikkat! Lütfen taleplerinizi yukarıda belirtilen e-posta adresi üzerinden iletiniz. Bu e-postayı yanıtlamayınız.</u></p>" +
                         "<p>Saygılarımızla,</p>" + NovaImzaModel.IsimsizImza;
                     
                     mail.Subject = "EFECE STOK LİSTESİ ("+ DateTime.Now.ToShortDateString()+")";
@@ -1515,21 +1541,34 @@ namespace SqlApi.Task
                     byte[] file = GeneratePdf(exec);
                     Attachment att = new Attachment(new MemoryStream(file), "EFECE_STOCK_LIST_" + DateTime.Now.ToShortDateString() + ".pdf");
                     mail.Attachments.Add(att);
-
-                    mail.Body = "<p>Dear Partners;</p><p>Attached you can find our weekly stock list. Have a special inquiry? Please contact us.</p><p>If you no longer want to receive this list, please reply to <a href=\"mailto:export@efecegalvaniz.com\">export@efecegalvaniz.com</a>.</p><p>Kind Regards,</p>" + NovaImzaModel.ExportImza;
+                byte[] imageArray = System.IO.File.ReadAllBytes("Resources\\Images\\export.png");
+                string base64String = Convert.ToBase64String(imageArray);
+                mail.Body = "<p>Dear Partners;</p><p>Attached you can find our weekly stock list. Have a special inquiry? Please contact us.</p><p>If you no longer want to receive this list, please reply to <a href=\"mailto:export@efecegalvaniz.com\">export@efecegalvaniz.com</a>.</p><p>Kind Regards,</p>" +"<img src = \"data:image/png;base64,"+ base64String + "\" />";
                 }
 
 
 
                 for(var  i = 0; i < mailList.Count; i++)
                 {
+                if(mail.Bcc.Count > 0)
+                {
+
                     mail.Bcc.Clear();
-                    mail.Bcc.Add(mailList[i].MAIL);
+                }
+                mail.Bcc.Add(mailList[i].MAIL);
                 try
                 {
+
                     smtp.Send(mail);
+
                 }
                 catch (Exception e)
+                {
+                    
+                    List.Add(mailList[i].MAIL);
+                    
+                }
+                if(i== mailList.Count - 1 && List.Count>0)
                 {
                     MailMessage mail1 = new MailMessage();
                     mail1.From = new MailAddress("sistem@efecegalvaniz.com");
@@ -1539,16 +1578,31 @@ namespace SqlApi.Task
                     mail1.IsBodyHtml = true;
                     mail1.Subject = "EFECE STOK LİSTE";
                     mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                    mail1.Body = "Mail " + mailList[i].MAIL + " adresine gönderilemedi.";
+                    var s = "";
+                    for(var a=0;a<List.Count;a++)
+                    {
+                        s += List[a] + ",";
+                    }
+                    mail1.Body = "Mail " + s.Substring(0,s.Length-1) + " adresine gönderilemedi.";
                     smtp1.Send(mail1);
                 }
-                }
-                    
-                
-                
-           
+
+            }
+            
 
 
+
+
+
+        }
+        public static class MyServer
+        {
+            public static string MapPath(string path)
+            {
+                return Path.Combine(
+                    (string)AppDomain.CurrentDomain.GetData("ContentRootPath"),
+                    path);
+            }
         }
         public byte[] GeneratePdfYerli(List<ExportMailModel> data)
         {

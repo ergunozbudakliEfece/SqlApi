@@ -70,7 +70,7 @@ namespace SqlApi
                 options.AddPolicy(name: "AllowOrigin",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:44332", "http://localhost:50331", "http://192.168.2.13", "http://192.168.2.168:8080", "http://nova.efece.com", "https://192.168.2.209:105", "http://192.168.2.209", "http://192.168.2.202", "http://192.168.2.13:81", "http://192.168.2.13:85", "http://192.168.35.40")
+                        builder.WithOrigins("http://localhost:44332", "http://localhost:50331", "http://192.168.2.13", "http://192.168.2.168:8080", "http://nova.efece.com", "https://192.168.2.209:105", "http://192.168.2.209", "http://192.168.2.202", "http://192.168.2.13:81", "http://192.168.2.13:85", "http://192.168.35.40", "http://192.168.2.13:82")
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
                     });

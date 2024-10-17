@@ -2,7 +2,7 @@
 
 namespace SqlApi.Models
 {
-    public class DetayliSipDetaysizModel
+    public class DetayliSipIhracatDetaysizModel
     {
         public string? SIPARIS_NO { get; set; }
         public DateTime? TARIH { get; set; }
@@ -18,6 +18,5 @@ namespace SqlApi.Models
         public string? SSIP_CHECK { get; set; }
         public string? OZEL_KOD1 { get; set; }
         public Int16? ODEMEGUNU { get; set; }
-        public DateTime? ODEMETARIHI { get; set; }
     }
 }

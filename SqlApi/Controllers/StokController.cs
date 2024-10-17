@@ -137,6 +137,37 @@ namespace SqlApi.Controllers
 
             return  DataTableToJSONWithJavaScriptSerializer(table);
         }
+        [HttpGet("Plan/{HatKodu}")]
+        public string GetPlan(string HatKodu)
+        {
+
+
+            DataTable table = new DataTable();
+
+
+            string query = @"SELECT STOK_ADI,SS.STOK_KODU,KULL4S FROM EFECE2023..TBLSTSABIT  AS SS WITH(NOLOCK) LEFT JOIN 
+EFECE2023..TBLSTSABITEK AS SE WITH(NOLOCK) ON SS.STOK_KODU=SE.STOK_KODU
+WHERE SE.KULL4S LIKE '%"+ HatKodu+ "%' AND SS.STOK_KODU NOT IN(SELECT EFECE2023.DBO.TRK(STOK_KODU) FROM TBL_NOVA_PLANLANAN_IE)";
+            string sqldataSource = _configuration.GetConnectionString("connn");
+            SqlDataReader sqlreader;
+            using (SqlConnection mycon = new SqlConnection(sqldataSource))
+            {
+                mycon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                {
+                    sqlreader = myCommand.ExecuteReader();
+                    table.Load(sqlreader);
+                    sqlreader.Close();
+                    mycon.Close();
+                }
+            }
+
+
+
+
+
+            return DataTableToJSONWithJavaScriptSerializer(table);
+        }
         [HttpGet("ozelkosul")]
         public JsonResult GetOzel()
         {
