@@ -30,6 +30,7 @@ namespace SqlApi.Models
         public string? DUZELTME_YAPAN_KULLANICI { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? DUZELTME_TARIHI { get; set; }
-       
+        public string? ILETISIM_KANALI { get; set; }
+        public string? URUNLER { get; set; }
     }
 }

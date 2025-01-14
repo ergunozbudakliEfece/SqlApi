@@ -72,13 +72,13 @@ namespace SqlApi.Task
                     day2 = 0;
                 }
 
-                if (currentTime.DayOfWeek == DayOfWeek.Friday && currentTime.Hour == 19 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond == 0)
-                {
+                //if (currentTime.Hour == 19 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek == DayOfWeek.Friday)
+                //{
 
-                    Singleton fromsingleton = Singleton.GetInstance();
-                    fromsingleton.DoWork(currentTime, _configuration);
+                //    Singleton fromsingleton = Singleton.GetInstance();
+                //    fromsingleton.DoWork(currentTime, _configuration);
 
-                }
+                //}
                 //else if (currentTime.Hour == 8 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond==0 && currentTime.DayOfWeek != DayOfWeek.Sunday)
                 //{
                 //    MailMessage mail = new MailMessage();
@@ -485,455 +485,455 @@ namespace SqlApi.Task
                 //    }
 
                 //}
-                else if (currentTime.Hour == 18 && currentTime.Minute == 45 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday)
-                {
-                    MailMessage mail = new MailMessage();
-                    try
-                    {
-                        string query2 = @" EXEC SP_SEND_MAIL 3";
-                        List<MailModel> exec2 = null;
-                        string sqldataSource2 = _configuration.GetConnectionString("Connn");
-                        SqlDataReader sqlreader2;
-                        using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
-                        {
-                            mycon2.Open();
-                            using (SqlCommand myCommand1 = new SqlCommand(query2, mycon2))
-                            {
-                                sqlreader2 = myCommand1.ExecuteReader();
-                                exec2 = DataReaderMapToList<MailModel>(sqlreader2);
-                                sqlreader2.Close();
-                                mycon2.Close();
-                            }
-                        }
+                //else if (currentTime.Hour == 18 && currentTime.Minute == 45 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday)
+                //{
+                //    MailMessage mail = new MailMessage();
+                //    try
+                //    {
+                //        string query2 = @"EXEC SP_SEND_MAIL 3";
+                //        List<MailModel> exec2 = null;
+                //        string sqldataSource2 = _configuration.GetConnectionString("Connn");
+                //        SqlDataReader sqlreader2;
+                //        using (SqlConnection mycon2 = new SqlConnection(sqldataSource2))
+                //        {
+                //            mycon2.Open();
+                //            using (SqlCommand myCommand1 = new SqlCommand(query2, mycon2))
+                //            {
+                //                sqlreader2 = myCommand1.ExecuteReader();
+                //                exec2 = DataReaderMapToList<MailModel>(sqlreader2);
+                //                sqlreader2.Close();
+                //                mycon2.Close();
+                //            }
+                //        }
 
 
-                        string query1 = @"EXEC NOVA_SP_MSIP_KONTROL";
-                        var body = "";
-                        List<msipModel> exec = null;
-                        string sqldataSource1 = _configuration.GetConnectionString("Conn");
-                        SqlDataReader sqlreader1;
-                        using (SqlConnection mycon1 = new SqlConnection(sqldataSource1))
-                        {
-                            mycon1.Open();
-                            using (SqlCommand myCommand1 = new SqlCommand(query1, mycon1))
-                            {
-                                sqlreader1 = myCommand1.ExecuteReader();
-                                exec = DataReaderMapToList<msipModel>(sqlreader1);
-                                sqlreader1.Close();
-                                mycon1.Close();
-                            }
-                        }
-                        string query3 = @"EXEC NOVA_SP_MSIP_KONTROL2";
+                //        string query1 = @"EXEC NOVA_SP_MSIP_KONTROL";
+                //        var body = "";
+                //        List<msipModel> exec = null;
+                //        string sqldataSource1 = _configuration.GetConnectionString("Conn");
+                //        SqlDataReader sqlreader1;
+                //        using (SqlConnection mycon1 = new SqlConnection(sqldataSource1))
+                //        {
+                //            mycon1.Open();
+                //            using (SqlCommand myCommand1 = new SqlCommand(query1, mycon1))
+                //            {
+                //                sqlreader1 = myCommand1.ExecuteReader();
+                //                exec = DataReaderMapToList<msipModel>(sqlreader1);
+                //                sqlreader1.Close();
+                //                mycon1.Close();
+                //            }
+                //        }
+                //        string query3 = @"EXEC NOVA_SP_MSIP_KONTROL2";
 
-                        List<MSIPModel2> exec3 = null;
-                        string sqldataSource3 = _configuration.GetConnectionString("Conn");
-                        SqlDataReader sqlreader3;
-                        using (SqlConnection mycon3 = new SqlConnection(sqldataSource3))
-                        {
-                            mycon3.Open();
-                            using (SqlCommand myCommand3 = new SqlCommand(query3, mycon3))
-                            {
-                                sqlreader3 = myCommand3.ExecuteReader();
-                                exec3 = DataReaderMapToList<MSIPModel2>(sqlreader3);
-                                sqlreader3.Close();
-                                mycon3.Close();
-                            }
-                        }
-                        var ToplamTable = "<table style='border: 1px solid #FFDDDD;border-collapse: collapse;'><tr><th style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>GENEL TOPLAM TL</th><th style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>GENEL TOPLAM USD</th><th style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>KUR</th></tr><tr><td style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>" + exec3[0].NET_TUTAR.ToString("N", new CultureInfo("tr-TR")) + "</td><td style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>" + exec3[1].NET_TUTAR.ToString("N", new CultureInfo("tr-TR")) + "</td><td style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>" + exec3[1].KUR + "</td></tr></table>";
-                        List<string> names = new List<string>();
-                        names = exec.Select(x => x.PLASIYER_ADI).Distinct().ToList();
-                        List<PlasiyerOrtModel> plasiyerOrtModelList = new List<PlasiyerOrtModel>();
-                        int zarar = exec.Where(x => x.FIYAT_KONTROL < 1 && x.DEPO_KODU != 10).ToList().Count;
-                        int kar = exec.Where(x => x.FIYAT_KONTROL >= 1 && x.DEPO_KODU != 10).ToList().Count;
-                        int bilgisiz = exec.Where(x => x.FIYAT_KONTROL == null && x.DEPO_KODU != 10).ToList().Count;
-                        int direkt = exec.Where(x => x.DEPO_KODU == 10).ToList().Count;
-                        int toplam = exec.Count;
-                        double zararort = ((double.Parse(zarar.ToString()) * 100) / double.Parse(toplam.ToString()));
-                        double karort = ((double.Parse(kar.ToString()) * 100) / double.Parse(toplam.ToString()));
-                        double bilgisizort = ((double.Parse(bilgisiz.ToString()) * 100) / double.Parse(toplam.ToString()));
-                        double direktort = ((double.Parse(direkt.ToString()) * 100) / double.Parse(toplam.ToString()));
-                        for (var i = 0; i < names.Count; i++)
-                        {
-                            int zararkisi = exec.Where(x => x.FIYAT_KONTROL < 1 && x.DEPO_KODU != 10 && x.PLASIYER_ADI == names[i]).ToList().Count;
-                            int karkisi = exec.Where(x => x.FIYAT_KONTROL >= 1 && x.DEPO_KODU != 10 && x.PLASIYER_ADI == names[i]).ToList().Count;
-                            int bilgisizkisi = exec.Where(x => x.FIYAT_KONTROL == null && x.DEPO_KODU != 10 && x.PLASIYER_ADI == names[i]).ToList().Count;
-                            int direktkisi = exec.Where(x => x.DEPO_KODU == 10 && x.PLASIYER_ADI == names[i]).ToList().Count;
-                            double zararortkisi = ((double.Parse(zararkisi.ToString()) * 100) / double.Parse(toplam.ToString()));
-                            double karortkisi = ((double.Parse(karkisi.ToString()) * 100) / double.Parse(toplam.ToString()));
-                            double bilgisizortkisi = ((double.Parse(bilgisizkisi.ToString()) * 100) / double.Parse(toplam.ToString()));
-                            double direktortkisi = ((double.Parse(direktkisi.ToString()) * 100) / double.Parse(toplam.ToString()));
-                            int toplamkisi = exec.Where(x => x.PLASIYER_ADI == names[i]).ToList().Count;
-                            PlasiyerOrtModel plasiyerOrt = new PlasiyerOrtModel
-                            {
-                                Plasiyer = names[i],
-                                Top = toplamkisi,
-                                Zarar = zararortkisi,
-                                Kar = karortkisi,
-                                Eksik = bilgisizortkisi,
-                                FabDirekt = direktortkisi
-                            };
-                            plasiyerOrtModelList.Add(plasiyerOrt);
-                        }
-                        for (var i = 0; i < exec.Count; i++)
-                        {
-                            var col = "#ACFFAC";
+                //        List<MSIPModel2> exec3 = null;
+                //        string sqldataSource3 = _configuration.GetConnectionString("Conn");
+                //        SqlDataReader sqlreader3;
+                //        using (SqlConnection mycon3 = new SqlConnection(sqldataSource3))
+                //        {
+                //            mycon3.Open();
+                //            using (SqlCommand myCommand3 = new SqlCommand(query3, mycon3))
+                //            {
+                //                sqlreader3 = myCommand3.ExecuteReader();
+                //                exec3 = DataReaderMapToList<MSIPModel2>(sqlreader3);
+                //                sqlreader3.Close();
+                //                mycon3.Close();
+                //            }
+                //        }
+                //        var ToplamTable = "<table style='border: 1px solid #FFDDDD;border-collapse: collapse;'><tr><th style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>GENEL TOPLAM TL</th><th style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>GENEL TOPLAM USD</th><th style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>KUR</th></tr><tr><td style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>" + exec3[0].NET_TUTAR.ToString("N", new CultureInfo("tr-TR")) + "</td><td style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>" + exec3[1].NET_TUTAR.ToString("N", new CultureInfo("tr-TR")) + "</td><td style='border: 1px solid #FFDDDD;border-collapse: collapse;width:125px;text-align: center'>" + exec3[1].KUR + "</td></tr></table>";
+                //        List<string> names = new List<string>();
+                //        names = exec.Select(x => x.PLASIYER_ADI).Distinct().ToList();
+                //        List<PlasiyerOrtModel> plasiyerOrtModelList = new List<PlasiyerOrtModel>();
+                //        int zarar = exec.Where(x => x.FIYAT_KONTROL < 1 && x.DEPO_KODU != 10).ToList().Count;
+                //        int kar = exec.Where(x => x.FIYAT_KONTROL >= 1 && x.DEPO_KODU != 10).ToList().Count;
+                //        int bilgisiz = exec.Where(x => x.FIYAT_KONTROL == null && x.DEPO_KODU != 10).ToList().Count;
+                //        int direkt = exec.Where(x => x.DEPO_KODU == 10).ToList().Count;
+                //        int toplam = exec.Count;
+                //        double zararort = ((double.Parse(zarar.ToString()) * 100) / double.Parse(toplam.ToString()));
+                //        double karort = ((double.Parse(kar.ToString()) * 100) / double.Parse(toplam.ToString()));
+                //        double bilgisizort = ((double.Parse(bilgisiz.ToString()) * 100) / double.Parse(toplam.ToString()));
+                //        double direktort = ((double.Parse(direkt.ToString()) * 100) / double.Parse(toplam.ToString()));
+                //        for (var i = 0; i < names.Count; i++)
+                //        {
+                //            int zararkisi = exec.Where(x => x.FIYAT_KONTROL < 1 && x.DEPO_KODU != 10 && x.PLASIYER_ADI == names[i]).ToList().Count;
+                //            int karkisi = exec.Where(x => x.FIYAT_KONTROL >= 1 && x.DEPO_KODU != 10 && x.PLASIYER_ADI == names[i]).ToList().Count;
+                //            int bilgisizkisi = exec.Where(x => x.FIYAT_KONTROL == null && x.DEPO_KODU != 10 && x.PLASIYER_ADI == names[i]).ToList().Count;
+                //            int direktkisi = exec.Where(x => x.DEPO_KODU == 10 && x.PLASIYER_ADI == names[i]).ToList().Count;
+                //            double zararortkisi = ((double.Parse(zararkisi.ToString()) * 100) / double.Parse(toplam.ToString()));
+                //            double karortkisi = ((double.Parse(karkisi.ToString()) * 100) / double.Parse(toplam.ToString()));
+                //            double bilgisizortkisi = ((double.Parse(bilgisizkisi.ToString()) * 100) / double.Parse(toplam.ToString()));
+                //            double direktortkisi = ((double.Parse(direktkisi.ToString()) * 100) / double.Parse(toplam.ToString()));
+                //            int toplamkisi = exec.Where(x => x.PLASIYER_ADI == names[i]).ToList().Count;
+                //            PlasiyerOrtModel plasiyerOrt = new PlasiyerOrtModel
+                //            {
+                //                Plasiyer = names[i],
+                //                Top = toplamkisi,
+                //                Zarar = zararortkisi,
+                //                Kar = karortkisi,
+                //                Eksik = bilgisizortkisi,
+                //                FabDirekt = direktortkisi
+                //            };
+                //            plasiyerOrtModelList.Add(plasiyerOrt);
+                //        }
+                //        for (var i = 0; i < exec.Count; i++)
+                //        {
+                //            var col = "#ACFFAC";
 
-                            if (exec[i].DEPO_KODU != 10)
-                            {
-                                if (exec[i].FIYAT_KONTROL != null)
-                                {
-                                    if (exec[i].FIYAT_KONTROL < 1)
-                                    {
-                                        col = "#FFDDDD";
-                                    }
-                                }
-                                else
-                                {
-                                    col = "#D5FFFF";
-                                }
-                            }
-                            else
-                            {
-                                col = "#FFFFFF";
-                            }
-
-
-
-                            if (!body.Contains(exec[i].FISNO))
-                            {
-                                var liste = exec.Where(x => x.FISNO.Equals(exec[i].FISNO)).ToList();
-                                if (liste.Count > 1)
-                                {
-                                    var t = "";
-                                    if (liste.Count > 0)
-                                    {
-                                        body = body + "<tr style='background:" + col + ";border-top:4px solid black;'><td rowspan='" + liste.Count + "' style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px;background:white;'>&nbsp" + liste[0].FISNO + "&nbsp</td>";
-                                    }
-                                    else
-                                    {
-                                        body = body + "<tr style='background:" + col + ";border-top:4px solid black;border-bottom:4px solid black;'><td rowspan='" + liste.Count + "' style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px;background:white;'>&nbsp" + liste[0].FISNO + "&nbsp</td>";
-                                    }
-
-                                    for (var a = 0; a < liste.Count; a++)
-                                    {
-                                        if (a == 0)
-                                        {
-                                            t = "<td rowspan='" + liste.Count + "' style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white;'>&nbsp" + liste[a].KAYIT_ZAMANI.Substring(0, 5) + "&nbsp</td><td rowspan='" + liste.Count + "' style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white;'>" + liste[a].PLASIYER_ADI + "</td><td rowspan='" + liste.Count + "' style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].CARI_ISIM + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:left;'>1- " + liste[a].STOK_ADI + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR2 + " " + liste[a].SP_OLCUBR2 + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR + " " + liste[a].SP_OLCUBR + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_BRUT_FIYAT + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_ISKONTO + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_NET_FIYAT + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_FIYATI + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_TIPI + "</td><" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + " style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].SP_KUR + "</" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + "><" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + " style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].NETSIS_KUR + "</" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + "><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].BAZ_KUR + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>&nbsp" + liste[a].FIYATKODU + "&nbsp</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_BRUT_FIYAT.Replace(".", ",") + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_ISKONTO + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + (liste[a].LISTE_NET_TOPTAN_FIYAT != null ? liste[a].LISTE_NET_TOPTAN_FIYAT.Replace(".", ",") : "") + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].FIYATDOVIZTIPI + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].HES_TL_FIYAT + "</td></tr>";
-                                        }
-                                        else if (a == liste.Count - 1)
-                                        {
-                                            col = "#ACFFAC";
-                                            if (liste[a].DEPO_KODU != 10)
-                                            {
-                                                if (liste[a].FIYAT_KONTROL != null)
-                                                {
-                                                    if (liste[a].FIYAT_KONTROL < 1)
-                                                    {
-                                                        col = "#FFDDDD";
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    col = "#D5FFFF";
-                                                }
-                                            }
-                                            else
-                                            {
-                                                col = "#FFFFFF";
-                                            }
-                                            t = t + "<tr style='background:" + col + ";border-bottom:4px solid black;'><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:left;'>" + (a + 1).ToString() + "- " + liste[a].STOK_ADI + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR2 + " " + liste[a].SP_OLCUBR2 + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR + " " + liste[a].SP_OLCUBR + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_BRUT_FIYAT + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_ISKONTO + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_NET_FIYAT + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_FIYATI + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_TIPI + "</td><" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + " style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_KUR + "</" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + "><" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + " style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].NETSIS_KUR + "</" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + "><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].BAZ_KUR + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>&nbsp" + liste[a].FIYATKODU + "&nbsp</td><td style='font-style: italic;border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_BRUT_FIYAT.Replace(".", ",") + "</td><td style='font-style: italic;border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_ISKONTO + "</td><td style='font-style: italic;border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + (liste[a].LISTE_NET_TOPTAN_FIYAT != null ? liste[a].LISTE_NET_TOPTAN_FIYAT.Replace(".", ",") : "") + "</td><td style='font-style: italic;border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].FIYATDOVIZTIPI + "</td><td style='font-style: italic;border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].HES_TL_FIYAT + "</td></tr>";
-                                        }
-                                        else
-                                        {
-                                            col = "#ACFFAC";
-                                            if (liste[a].DEPO_KODU != 10)
-                                            {
-                                                if (liste[a].FIYAT_KONTROL != null)
-                                                {
-                                                    if (liste[a].FIYAT_KONTROL < 1)
-                                                    {
-                                                        col = "#FFDDDD";
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    col = "#D5FFFF";
-                                                }
-                                            }
-                                            else
-                                            {
-                                                col = "#FFFFFF";
-                                            }
-                                            t = t + "<tr style='background:" + col + "'><td style='border: 1px solid #CCCCCC;border-right:1px solid #CCCCCC;border-collapse: collapse;text-align:left;'>" + (a + 1).ToString() + "- " + liste[a].STOK_ADI + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR2 + " " + liste[a].SP_OLCUBR2 + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR + " " + liste[a].SP_OLCUBR + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_BRUT_FIYAT + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_ISKONTO + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_NET_FIYAT + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_FIYATI + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_TIPI + "</td><" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + " style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].SP_KUR + "</" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + "><" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + " style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].NETSIS_KUR + "</" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + "><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].BAZ_KUR + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>&nbsp" + liste[a].FIYATKODU + "&nbsp</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_BRUT_FIYAT.Replace(".", ",") + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_ISKONTO + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + (liste[a].LISTE_NET_TOPTAN_FIYAT != null ? liste[a].LISTE_NET_TOPTAN_FIYAT.Replace(".", ",") : "") + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].FIYATDOVIZTIPI + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].HES_TL_FIYAT + "</td></tr>";
-                                        }
+                //            if (exec[i].DEPO_KODU != 10)
+                //            {
+                //                if (exec[i].FIYAT_KONTROL != null)
+                //                {
+                //                    if (exec[i].FIYAT_KONTROL < 1)
+                //                    {
+                //                        col = "#FFDDDD";
+                //                    }
+                //                }
+                //                else
+                //                {
+                //                    col = "#D5FFFF";
+                //                }
+                //            }
+                //            else
+                //            {
+                //                col = "#FFFFFF";
+                //            }
 
 
 
+                //            if (!body.Contains(exec[i].FISNO))
+                //            {
+                //                var liste = exec.Where(x => x.FISNO.Equals(exec[i].FISNO)).ToList();
+                //                if (liste.Count > 1)
+                //                {
+                //                    var t = "";
+                //                    if (liste.Count > 0)
+                //                    {
+                //                        body = body + "<tr style='background:" + col + ";border-top:4px solid black;'><td rowspan='" + liste.Count + "' style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px;background:white;'>&nbsp" + liste[0].FISNO + "&nbsp</td>";
+                //                    }
+                //                    else
+                //                    {
+                //                        body = body + "<tr style='background:" + col + ";border-top:4px solid black;border-bottom:4px solid black;'><td rowspan='" + liste.Count + "' style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px;background:white;'>&nbsp" + liste[0].FISNO + "&nbsp</td>";
+                //                    }
 
-                                    }
-                                    body = body + t;
-                                }
-                                else
-                                {
-                                    if (i != exec.Count - 1)
-                                    {
-                                        body = body + "<tr style='background:" + col + "'><td rowspan='" + liste.Count + "' style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>&nbsp" + liste[0].FISNO + "&nbsp</td>" +
-                                                                           "<td style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'>&nbsp" + liste[0].KAYIT_ZAMANI.Substring(0, 5) + "&nbsp</td><td style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'>" + liste[0].PLASIYER_ADI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;background:white;text-align:center;'>" + liste[0].CARI_ISIM + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:left;'>1- " + liste[0].STOK_ADI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[0].MIKTAR2 + " " + liste[0].SP_OLCUBR2 + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[0].MIKTAR + " " + liste[0].SP_OLCUBR + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_BRUT_FIYAT + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_ISKONTO + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_NET_FIYAT + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_DOVIZ_FIYATI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_DOVIZ_TIPI + "</td><" + (liste[0].BAZ_KUR == "SIPARIS" ? "th" : "td") + " style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_KUR + "</" + (liste[0].BAZ_KUR == "SIPARIS" ? "th" : "td") + "><" + (liste[0].BAZ_KUR == "NETSIS" ? "th" : "td") + " style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].NETSIS_KUR + "</" + (liste[0].BAZ_KUR == "NETSIS" ? "th" : "td") + "><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].BAZ_KUR + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].FIYATKODU + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].LISTE_BRUT_FIYAT.Replace(".", ",") + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].LISTE_ISKONTO + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + (liste[0].LISTE_NET_TOPTAN_FIYAT != null ? liste[0].LISTE_NET_TOPTAN_FIYAT.Replace(".", ",") : "") + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].FIYATDOVIZTIPI + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].HES_TL_FIYAT + "</td></tr>";
-                                    }
-                                    else
-                                    {
-                                        body = body + "<tr style='background:" + col + "'><td rowspan='" + liste.Count + "' style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>&nbsp" + liste[0].FISNO + "&nbsp</td>" +
-                                       "<td style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'>&nbsp" + liste[0].KAYIT_ZAMANI.Substring(0, 5) + "&nbsp</td><td style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'>" + liste[0].PLASIYER_ADI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;background:white;text-align:center;'>" + liste[0].CARI_ISIM + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:left;'>1- " + liste[0].STOK_ADI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[0].MIKTAR2 + " " + liste[0].SP_OLCUBR2 + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[0].MIKTAR + " " + liste[0].SP_OLCUBR + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_BRUT_FIYAT + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_ISKONTO + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_NET_FIYAT + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_DOVIZ_FIYATI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_DOVIZ_TIPI + "</td><" + (liste[0].BAZ_KUR == "SIPARIS" ? "th" : "td") + " style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_KUR + "</" + (liste[0].BAZ_KUR == "SIPARIS" ? "th" : "td") + "><" + (liste[0].BAZ_KUR == "NETSIS" ? "th" : "td") + " style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].NETSIS_KUR + "</" + (liste[0].BAZ_KUR == "NETSIS" ? "th" : "td") + "><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].BAZ_KUR + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].FIYATKODU + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].LISTE_BRUT_FIYAT.Replace(".", ",") + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].LISTE_ISKONTO + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + (liste[0].LISTE_NET_TOPTAN_FIYAT != null ? liste[0].LISTE_NET_TOPTAN_FIYAT.Replace(".", ",") : "") + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].FIYATDOVIZTIPI + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].HES_TL_FIYAT + "</td></tr>";
-                                    }
+                //                    for (var a = 0; a < liste.Count; a++)
+                //                    {
+                //                        if (a == 0)
+                //                        {
+                //                            t = "<td rowspan='" + liste.Count + "' style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white;'>&nbsp" + liste[a].KAYIT_ZAMANI.Substring(0, 5) + "&nbsp</td><td rowspan='" + liste.Count + "' style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;background:white;'>" + liste[a].PLASIYER_ADI + "</td><td rowspan='" + liste.Count + "' style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].CARI_ISIM + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:left;'>1- " + liste[a].STOK_ADI + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR2 + " " + liste[a].SP_OLCUBR2 + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR + " " + liste[a].SP_OLCUBR + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_BRUT_FIYAT + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_ISKONTO + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_NET_FIYAT + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_FIYATI + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_TIPI + "</td><" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + " style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].SP_KUR + "</" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + "><" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + " style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].NETSIS_KUR + "</" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + "><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].BAZ_KUR + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>&nbsp" + liste[a].FIYATKODU + "&nbsp</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_BRUT_FIYAT.Replace(".", ",") + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_ISKONTO + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + (liste[a].LISTE_NET_TOPTAN_FIYAT != null ? liste[a].LISTE_NET_TOPTAN_FIYAT.Replace(".", ",") : "") + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].FIYATDOVIZTIPI + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].HES_TL_FIYAT + "</td></tr>";
+                //                        }
+                //                        else if (a == liste.Count - 1)
+                //                        {
+                //                            col = "#ACFFAC";
+                //                            if (liste[a].DEPO_KODU != 10)
+                //                            {
+                //                                if (liste[a].FIYAT_KONTROL != null)
+                //                                {
+                //                                    if (liste[a].FIYAT_KONTROL < 1)
+                //                                    {
+                //                                        col = "#FFDDDD";
+                //                                    }
+                //                                }
+                //                                else
+                //                                {
+                //                                    col = "#D5FFFF";
+                //                                }
+                //                            }
+                //                            else
+                //                            {
+                //                                col = "#FFFFFF";
+                //                            }
+                //                            t = t + "<tr style='background:" + col + ";border-bottom:4px solid black;'><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:left;'>" + (a + 1).ToString() + "- " + liste[a].STOK_ADI + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR2 + " " + liste[a].SP_OLCUBR2 + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR + " " + liste[a].SP_OLCUBR + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_BRUT_FIYAT + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_ISKONTO + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_NET_FIYAT + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_FIYATI + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_TIPI + "</td><" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + " style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_KUR + "</" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + "><" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + " style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].NETSIS_KUR + "</" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + "><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].BAZ_KUR + "</td><td style='border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>&nbsp" + liste[a].FIYATKODU + "&nbsp</td><td style='font-style: italic;border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_BRUT_FIYAT.Replace(".", ",") + "</td><td style='font-style: italic;border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_ISKONTO + "</td><td style='font-style: italic;border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + (liste[a].LISTE_NET_TOPTAN_FIYAT != null ? liste[a].LISTE_NET_TOPTAN_FIYAT.Replace(".", ",") : "") + "</td><td style='font-style: italic;border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].FIYATDOVIZTIPI + "</td><td style='font-style: italic;border-bottom: 4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].HES_TL_FIYAT + "</td></tr>";
+                //                        }
+                //                        else
+                //                        {
+                //                            col = "#ACFFAC";
+                //                            if (liste[a].DEPO_KODU != 10)
+                //                            {
+                //                                if (liste[a].FIYAT_KONTROL != null)
+                //                                {
+                //                                    if (liste[a].FIYAT_KONTROL < 1)
+                //                                    {
+                //                                        col = "#FFDDDD";
+                //                                    }
+                //                                }
+                //                                else
+                //                                {
+                //                                    col = "#D5FFFF";
+                //                                }
+                //                            }
+                //                            else
+                //                            {
+                //                                col = "#FFFFFF";
+                //                            }
+                //                            t = t + "<tr style='background:" + col + "'><td style='border: 1px solid #CCCCCC;border-right:1px solid #CCCCCC;border-collapse: collapse;text-align:left;'>" + (a + 1).ToString() + "- " + liste[a].STOK_ADI + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR2 + " " + liste[a].SP_OLCUBR2 + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].MIKTAR + " " + liste[a].SP_OLCUBR + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_BRUT_FIYAT + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_ISKONTO + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_NET_FIYAT + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_FIYATI + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].SP_DOVIZ_TIPI + "</td><" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + " style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[a].SP_KUR + "</" + (liste[a].BAZ_KUR == "SIPARIS" ? "th" : "td") + "><" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + " style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].NETSIS_KUR + "</" + (liste[a].BAZ_KUR == "NETSIS" ? "th" : "td") + "><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].BAZ_KUR + "</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>&nbsp" + liste[a].FIYATKODU + "&nbsp</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_BRUT_FIYAT.Replace(".", ",") + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].LISTE_ISKONTO + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + (liste[a].LISTE_NET_TOPTAN_FIYAT != null ? liste[a].LISTE_NET_TOPTAN_FIYAT.Replace(".", ",") : "") + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].FIYATDOVIZTIPI + "</td><td style='font-style: italic;border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[a].HES_TL_FIYAT + "</td></tr>";
+                //                        }
 
 
 
 
-                                }
-                            }
+                //                    }
+                //                    body = body + t;
+                //                }
+                //                else
+                //                {
+                //                    if (i != exec.Count - 1)
+                //                    {
+                //                        body = body + "<tr style='background:" + col + "'><td rowspan='" + liste.Count + "' style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>&nbsp" + liste[0].FISNO + "&nbsp</td>" +
+                //                                                           "<td style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'>&nbsp" + liste[0].KAYIT_ZAMANI.Substring(0, 5) + "&nbsp</td><td style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'>" + liste[0].PLASIYER_ADI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;background:white;text-align:center;'>" + liste[0].CARI_ISIM + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:left;'>1- " + liste[0].STOK_ADI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[0].MIKTAR2 + " " + liste[0].SP_OLCUBR2 + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[0].MIKTAR + " " + liste[0].SP_OLCUBR + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_BRUT_FIYAT + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_ISKONTO + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_NET_FIYAT + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_DOVIZ_FIYATI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_DOVIZ_TIPI + "</td><" + (liste[0].BAZ_KUR == "SIPARIS" ? "th" : "td") + " style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_KUR + "</" + (liste[0].BAZ_KUR == "SIPARIS" ? "th" : "td") + "><" + (liste[0].BAZ_KUR == "NETSIS" ? "th" : "td") + " style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].NETSIS_KUR + "</" + (liste[0].BAZ_KUR == "NETSIS" ? "th" : "td") + "><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].BAZ_KUR + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].FIYATKODU + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].LISTE_BRUT_FIYAT.Replace(".", ",") + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].LISTE_ISKONTO + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + (liste[0].LISTE_NET_TOPTAN_FIYAT != null ? liste[0].LISTE_NET_TOPTAN_FIYAT.Replace(".", ",") : "") + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].FIYATDOVIZTIPI + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].HES_TL_FIYAT + "</td></tr>";
+                //                    }
+                //                    else
+                //                    {
+                //                        body = body + "<tr style='background:" + col + "'><td rowspan='" + liste.Count + "' style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse; text-align:center;width:150px'>&nbsp" + liste[0].FISNO + "&nbsp</td>" +
+                //                       "<td style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'>&nbsp" + liste[0].KAYIT_ZAMANI.Substring(0, 5) + "&nbsp</td><td style='background:white;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'>" + liste[0].PLASIYER_ADI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;background:white;text-align:center;'>" + liste[0].CARI_ISIM + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:left;'>1- " + liste[0].STOK_ADI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[0].MIKTAR2 + " " + liste[0].SP_OLCUBR2 + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;white-space: nowrap;'>" + liste[0].MIKTAR + " " + liste[0].SP_OLCUBR + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_BRUT_FIYAT + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_ISKONTO + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_NET_FIYAT + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_DOVIZ_FIYATI + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_DOVIZ_TIPI + "</td><" + (liste[0].BAZ_KUR == "SIPARIS" ? "th" : "td") + " style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].SP_KUR + "</" + (liste[0].BAZ_KUR == "SIPARIS" ? "th" : "td") + "><" + (liste[0].BAZ_KUR == "NETSIS" ? "th" : "td") + " style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].NETSIS_KUR + "</" + (liste[0].BAZ_KUR == "NETSIS" ? "th" : "td") + "><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].BAZ_KUR + "</td><td style='border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].FIYATKODU + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].LISTE_BRUT_FIYAT.Replace(".", ",") + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].LISTE_ISKONTO + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + (liste[0].LISTE_NET_TOPTAN_FIYAT != null ? liste[0].LISTE_NET_TOPTAN_FIYAT.Replace(".", ",") : "") + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].FIYATDOVIZTIPI + "</td><td style='font-style: italic;border-bottom:4px solid black;border-right: 1px solid #CCCCCC;border-collapse: collapse;text-align:center;'>" + liste[0].HES_TL_FIYAT + "</td></tr>";
+                //                    }
 
 
 
 
-                        }
-                        var img = NovaImzaModel.Imza;
-                        var kisiselOrtTr = "";
-                        plasiyerOrtModelList = plasiyerOrtModelList.OrderByDescending(x => x.Kar).ToList();
-                        for (var i = 0; i < plasiyerOrtModelList.Count; i++)
-                        {
-                            kisiselOrtTr += "<tr style='font-size:12px'><th style='border: 1px solid #CCCCCC;text-align: center'>" + (i + 1).ToString() + "</th><td style='border: 1px solid #CCCCCC;text-align: center'>" + plasiyerOrtModelList[i].Plasiyer + "</td><td style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(plasiyerOrtModelList[i].Kar, 1) + " %" + "</td><td style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(plasiyerOrtModelList[i].Zarar, 1) + " %" + "</td><td style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(plasiyerOrtModelList[i].Eksik, 1) + " %" + "</td><td style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(plasiyerOrtModelList[i].FabDirekt, 1) + " %" + "</td><td style='border: 1px solid #CCCCCC;text-align: center'>" + plasiyerOrtModelList[i].Top + "</td></tr>";
-                        }
-
-                        var table = "İyi akşamlar,</br></br>" + currentTime.Day.ToString() + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.MonthNames[(int)currentTime.Month - 1] + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek] + " günü 18:45 öncesi açılan müşteri siparişlerinin raporudur:</br></br>" +
-                            "<table style='border: 1px solid #CCCCCC;border-collapse: collapse;'><tr><td style='width:50px'></td><td style='width:150px'></td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;width:125px;background:#ACFFAC;text-align: center'>Liste Fiyatı Üstü</td><td style='width:125px;background:#FFDDDD;border: 1px solid #CCCCCC;border-collapse: collapse;text-align: center'>Liste Fiyatı Altı</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;width:100px;background:#D5FFFF;text-align: center'>Eksik Bilgi</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align: center;width:100px'>Fabrika Direkt</td><th></th></tr><tr><th style='width:50px text-align: center'>Sıra</th><th style='width:150px text-align: center'>Plasiyer</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(karort, 1) + " %" + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(zararort, 1) + " %" + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(bilgisizort, 1) + " %" + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(direktort, 1) + " %" + "</th><th style='text-align: center;width:100px'>Toplam</th></tr>" + kisiselOrtTr + "</tr><tr><th style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'></th><th style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'>Sipariş Sayısı</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + kar + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + zarar + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + bilgisiz + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + direkt + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + toplam + "</th></tr></table></br>" + ToplamTable +
-                            "</br><table style='border: 1px solid #CCCCCC;border-collapse: collapse;'><thead>" +
-                        "<tr style='border-bottom:4px solid black;'><th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspFİŞ NO&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspKAYIT ZAMANI&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspPLASİYER ADI&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspCARİ İSİM&nbsp</th><th style='position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'> STOK ADI </th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;white-space: nowrap;'>&nbspMİKTAR 1&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;white-space: nowrap;'>&nbspMİKTAR 2&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspBRÜT FİYAT&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspİSKONTO&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspNET FİYAT&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspDÖVİZ FİYATI&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspDÖVİZ TİPİ&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspKUR&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspNETSİS&nbspKUR&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspBAZ&nbspKUR&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspFİYAT KODU&nbsp</th><th style='position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspLİSTE BRÜT FİYATI&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspLİSTE İSKONTO&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspLİSTE NET TOPTAN FİYAT&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspFİYAT DÖVİZ TİPİ&nbsp</th>" +
-                        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspLİSTE FİYATI TL KARŞILIĞI&nbsp</th></tr></thead><tbody>"
-                        + body + "</tbody></table>" + img;
-
-                        string den = exec2[0].BCC.Substring(0, exec2[0].BCC.Length - 1);
-                        //string den1 = exec2[0].CC;
-                        //string den2 = exec2[0].TO;
-                        //if (den1 != null)
-                        //{
-                        //    mail.CC.Add(den1.Substring(0, exec2[0].BCC.Length - 1));
-                        //}
-                        //if (den2 != null)
-                        //{
-                        //    mail.To.Add(den2.Substring(0, exec2[0].TO.Length - 1));
-                        //}
-
-                        mail.Bcc.Add(den);
-                        //mail.Bcc.Add("ergunozbudakli@efecegalvaniz.com");
-                        //mail.Bcc.Add("ugurkonakci@efecegalvaniz.com");
-                        mail.From = new MailAddress("sistem@efecegalvaniz.com");
-                        mail.Body = "<html>" + table + "</html>";
-                        mail.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " MÜŞTERİ SİPARİŞİ KONTROL RAPORU";
+                //                }
+                //            }
 
 
-                        mail.IsBodyHtml = true;
-
-                        SmtpClient smtp = new System.Net.Mail.SmtpClient();
-                        smtp.Host = "192.168.2.13";
-                        smtp.UseDefaultCredentials = true;
-                        smtp.Send(mail);
-                    }
-                    catch (Exception e)
-                    {
-                        MailMessage mail1 = new MailMessage();
-                        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
-                        mail1.Body = e.Message;
-                        mail1.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " MÜŞTERİ SİPARİŞİ KONTROL RAPORU";
 
 
-                        mail1.IsBodyHtml = true;
+                //        }
+                //        var img = NovaImzaModel.Imza;
+                //        var kisiselOrtTr = "";
+                //        plasiyerOrtModelList = plasiyerOrtModelList.OrderByDescending(x => x.Kar).ToList();
+                //        for (var i = 0; i < plasiyerOrtModelList.Count; i++)
+                //        {
+                //            kisiselOrtTr += "<tr style='font-size:12px'><th style='border: 1px solid #CCCCCC;text-align: center'>" + (i + 1).ToString() + "</th><td style='border: 1px solid #CCCCCC;text-align: center'>" + plasiyerOrtModelList[i].Plasiyer + "</td><td style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(plasiyerOrtModelList[i].Kar, 1) + " %" + "</td><td style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(plasiyerOrtModelList[i].Zarar, 1) + " %" + "</td><td style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(plasiyerOrtModelList[i].Eksik, 1) + " %" + "</td><td style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(plasiyerOrtModelList[i].FabDirekt, 1) + " %" + "</td><td style='border: 1px solid #CCCCCC;text-align: center'>" + plasiyerOrtModelList[i].Top + "</td></tr>";
+                //        }
 
-                        SmtpClient smtp = new System.Net.Mail.SmtpClient();
-                        smtp.Host = "192.168.2.13";
-                        smtp.UseDefaultCredentials = true;
-                        smtp.Send(mail);
-                    }
+                //        var table = "İyi akşamlar,</br></br>" + currentTime.Day.ToString() + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.MonthNames[(int)currentTime.Month - 1] + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek] + " günü 18:45 öncesi açılan müşteri siparişlerinin raporudur:</br></br>" +
+                //            "<table style='border: 1px solid #CCCCCC;border-collapse: collapse;'><tr><td style='width:50px'></td><td style='width:150px'></td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;width:125px;background:#ACFFAC;text-align: center'>Liste Fiyatı Üstü</td><td style='width:125px;background:#FFDDDD;border: 1px solid #CCCCCC;border-collapse: collapse;text-align: center'>Liste Fiyatı Altı</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;width:100px;background:#D5FFFF;text-align: center'>Eksik Bilgi</td><td style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align: center;width:100px'>Fabrika Direkt</td><th></th></tr><tr><th style='width:50px text-align: center'>Sıra</th><th style='width:150px text-align: center'>Plasiyer</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(karort, 1) + " %" + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(zararort, 1) + " %" + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(bilgisizort, 1) + " %" + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + Math.Round(direktort, 1) + " %" + "</th><th style='text-align: center;width:100px'>Toplam</th></tr>" + kisiselOrtTr + "</tr><tr><th style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'></th><th style='border: 1px solid #CCCCCC;border-collapse: collapse;text-align:center'>Sipariş Sayısı</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + kar + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + zarar + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + bilgisiz + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + direkt + "</th><th style='border: 1px solid #CCCCCC;text-align: center'>" + toplam + "</th></tr></table></br>" + ToplamTable +
+                //            "</br><table style='border: 1px solid #CCCCCC;border-collapse: collapse;'><thead>" +
+                //        "<tr style='border-bottom:4px solid black;'><th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspFİŞ NO&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspKAYIT ZAMANI&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspPLASİYER ADI&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspCARİ İSİM&nbsp</th><th style='position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'> STOK ADI </th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;white-space: nowrap;'>&nbspMİKTAR 1&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;white-space: nowrap;'>&nbspMİKTAR 2&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspBRÜT FİYAT&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspİSKONTO&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspNET FİYAT&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspDÖVİZ FİYATI&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspDÖVİZ TİPİ&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspKUR&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspNETSİS&nbspKUR&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspBAZ&nbspKUR&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspFİYAT KODU&nbsp</th><th style='position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspLİSTE BRÜT FİYATI&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspLİSTE İSKONTO&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspLİSTE NET TOPTAN FİYAT&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspFİYAT DÖVİZ TİPİ&nbsp</th>" +
+                //        "<th style='border-bottom:4px solid black;position: sticky;border: 1px solid #CCCCCC;border-collapse: collapse;'>&nbspLİSTE FİYATI TL KARŞILIĞI&nbsp</th></tr></thead><tbody>"
+                //        + body + "</tbody></table>" + img;
 
-                }
-                else if (currentTime.Hour == 17 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.Millisecond == 0)
-                {
-                    MailMessage mail = new MailMessage();
-                    try
-                    {
-                        DataTable table = new DataTable();
-                        string query = @"EXEC dbo.SP_URETIM_GUNSONU @date='" + currentTime.ToString("yyyy-MM-dd") + "'";
-                        string sqldataSource = _configuration.GetConnectionString("connn");
-                        SqlDataReader sqlreader;
-                        using (SqlConnection mycon = new SqlConnection(sqldataSource))
-                        {
-                            mycon.Open();
-                            using (SqlCommand myCommand = new SqlCommand(query, mycon))
-                            {
-                                sqlreader = myCommand.ExecuteReader();
-                                table.Load(sqlreader);
-                                sqlreader.Close();
-                                mycon.Close();
-                            }
-                        }
+                //        string den = exec2[0].BCC.Substring(0, exec2[0].BCC.Length - 1);
+                //        //string den1 = exec2[0].CC;
+                //        //string den2 = exec2[0].TO;
+                //        //if (den1 != null)
+                //        //{
+                //        //    mail.CC.Add(den1.Substring(0, exec2[0].BCC.Length - 1));
+                //        //}
+                //        //if (den2 != null)
+                //        //{
+                //        //    mail.To.Add(den2.Substring(0, exec2[0].TO.Length - 1));
+                //        //}
 
-                        var d = StokController.DataTableToJSONWithJavaScriptSerializer(table);
-                        var rapor = JsonConvert.DeserializeObject<List<RaporVeri>>(d).AsQueryable();
-                        string body = GunlukUretimRaporuOlustur(rapor) + GunlukDepoRaporuOlustur(rapor);
-                        var img = NovaImzaModel.Imza;
-                        mail.Bcc.Add("ugurkonakci@efecegalvaniz.com");
-                        mail.Bcc.Add("ergunozbudakli@efecegalvaniz.com");
-                        mail.Bcc.Add("dincersipka@efecegalvaniz.com");
-                        mail.Bcc.Add("muratruzgar@efecegalvaniz.com");
-                        mail.Bcc.Add("alidonmez@efecegalvaniz.com");
-                        mail.Bcc.Add("onurcengiz@efecegalvaniz.com");
-                        mail.From = new MailAddress("sistem@efecegalvaniz.com");
-                        mail.Body = body + img;
-                        mail.Subject = "ÜRETİM RAPORU " + currentTime.ToString("dd.MM.yyyy");
-
-
-                        mail.IsBodyHtml = true;
-
-                        SmtpClient smtp = new System.Net.Mail.SmtpClient();
-                        smtp.Host = "192.168.2.13";
-                        smtp.UseDefaultCredentials = true;
-
-
-                        smtp.Send(mail);
-                    }
-                    catch (Exception e)
-                    {
-                        mail.From = new MailAddress("sistem@efecegalvaniz.com");
-                        mail.Body = e.Message;
-                        mail.Subject = "ÜRETİM RAPORU " + currentTime.ToString("dd.MM.yyyy");
+                //        mail.Bcc.Add(den);
+                //        //mail.Bcc.Add("ergunozbudakli@efecegalvaniz.com");
+                //        //mail.Bcc.Add("ugurkonakci@efecegalvaniz.com");
+                //        mail.From = new MailAddress("sistem@efecegalvaniz.com");
+                //        mail.Body = "<html>" + table + "</html>";
+                //        mail.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " MÜŞTERİ SİPARİŞİ KONTROL RAPORU";
 
 
-                        mail.IsBodyHtml = true;
+                //        mail.IsBodyHtml = true;
 
-                        SmtpClient smtp = new System.Net.Mail.SmtpClient();
-                        smtp.Host = "192.168.2.13";
-                        smtp.UseDefaultCredentials = true;
+                //        SmtpClient smtp = new System.Net.Mail.SmtpClient();
+                //        smtp.Host = "192.168.2.13";
+                //        smtp.UseDefaultCredentials = true;
+                //        smtp.Send(mail);
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        MailMessage mail1 = new MailMessage();
+                //        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                //        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
+                //        mail1.Body = e.Message;
+                //        mail1.Subject = currentTime.Day.ToString().PadLeft(2, '0') + "." + currentTime.Month.ToString().PadLeft(2, '0') + "." + currentTime.Year.ToString().PadLeft(2, '0') + " " + CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.DayNames[(int)currentTime.DayOfWeek].ToUpper() + " MÜŞTERİ SİPARİŞİ KONTROL RAPORU";
 
 
-                        smtp.Send(mail);
+                //        mail1.IsBodyHtml = true;
 
-                    }
+                //        SmtpClient smtp = new System.Net.Mail.SmtpClient();
+                //        smtp.Host = "192.168.2.13";
+                //        smtp.UseDefaultCredentials = true;
+                //        smtp.Send(mail);
+                //    }
+
+                //}
+                //else if (currentTime.Hour == 17 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.Millisecond == 0)
+                //{
+                //    MailMessage mail = new MailMessage();
+                //    try
+                //    {
+                //        DataTable table = new DataTable();
+                //        string query = @"EXEC dbo.SP_URETIM_GUNSONU @date='" + currentTime.ToString("yyyy-MM-dd") + "'";
+                //        string sqldataSource = _configuration.GetConnectionString("connn");
+                //        SqlDataReader sqlreader;
+                //        using (SqlConnection mycon = new SqlConnection(sqldataSource))
+                //        {
+                //            mycon.Open();
+                //            using (SqlCommand myCommand = new SqlCommand(query, mycon))
+                //            {
+                //                sqlreader = myCommand.ExecuteReader();
+                //                table.Load(sqlreader);
+                //                sqlreader.Close();
+                //                mycon.Close();
+                //            }
+                //        }
+
+                //        var d = StokController.DataTableToJSONWithJavaScriptSerializer(table);
+                //        var rapor = JsonConvert.DeserializeObject<List<RaporVeri>>(d).AsQueryable();
+                //        string body = GunlukUretimRaporuOlustur(rapor) + GunlukDepoRaporuOlustur(rapor);
+                //        var img = NovaImzaModel.Imza;
+                //        mail.Bcc.Add("ugurkonakci@efecegalvaniz.com");
+                //        mail.Bcc.Add("ergunozbudakli@efecegalvaniz.com");
+                //        mail.Bcc.Add("dincersipka@efecegalvaniz.com");
+                //        mail.Bcc.Add("muratruzgar@efecegalvaniz.com");
+                //        mail.Bcc.Add("alidonmez@efecegalvaniz.com");
+                //        mail.Bcc.Add("onurcengiz@efecegalvaniz.com");
+                //        mail.From = new MailAddress("sistem@efecegalvaniz.com");
+                //        mail.Body = body + img;
+                //        mail.Subject = "ÜRETİM RAPORU " + currentTime.ToString("dd.MM.yyyy");
 
 
-                }
-                else if (currentTime.Hour == 11 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
-                {
-                    OleDbConnection con;
-                    OleDbCommand cmd;
-                    OleDbDataReader dr;
-                    List<ExportExcelModel> list = new List<ExportExcelModel>();
-                    try
-                    {
-                        con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\192.168.2.3\ortak\YENİ Export-Ortak\EXPORT_STOCK_MAIL_LIST.xlsx; Extended Properties='Excel 12.0 xml;HDR=YES;READONLY=TRUE'");
+                //        mail.IsBodyHtml = true;
 
-                        cmd = new OleDbCommand("Select * FROM [Sayfa1$A1:B]", con);
-                        con.Open();
-                        dr = cmd.ExecuteReader();
+                //        SmtpClient smtp = new System.Net.Mail.SmtpClient();
+                //        smtp.Host = "192.168.2.13";
+                //        smtp.UseDefaultCredentials = true;
 
-                        while (dr.Read())
-                        {
-                            ExportExcelModel excel = new ExportExcelModel();
-                            if (dr["email"].ToString() != "")
-                            {
-                                excel.MAIL = dr["email"].ToString();
-                                list.Add(excel);
-                            }
-                        }
-                        con.Close();
-                        SENDMAIL(list, "yabanci");
-                    }
-                    catch (Exception e)
-                    {
-                        MailMessage mail1 = new MailMessage();
-                        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
-                        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
-                        smtp1.Host = "192.168.2.13";
-                        smtp1.UseDefaultCredentials = true;
-                        mail1.IsBodyHtml = true;
-                        mail1.Subject = "EFECE STOCK LIST";
-                        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                        mail1.Body = e.Message;
-                        smtp1.Send(mail1);
-                    }
 
-                }
-                else if (currentTime.Hour == 10 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
-                {
+                //        smtp.Send(mail);
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        mail.From = new MailAddress("sistem@efecegalvaniz.com");
+                //        mail.Body = e.Message;
+                //        mail.Subject = "ÜRETİM RAPORU " + currentTime.ToString("dd.MM.yyyy");
 
-                    OleDbConnection con;
-                    OleDbCommand cmd;
-                    OleDbDataReader dr;
-                    List<ExportExcelModel> list = new List<ExportExcelModel>();
-                    try
-                    {
-                        con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\192.168.2.3\ortak\SATIS\STOK_MAILING_LISTESI.xlsx; Extended Properties='Excel 12.0 xml;HDR=YES;READONLY=TRUE'");
 
-                        cmd = new OleDbCommand("Select * FROM [Sayfa1$A1:B]", con);
-                        con.Open();
-                        dr = cmd.ExecuteReader();
+                //        mail.IsBodyHtml = true;
 
-                        while (dr.Read())
-                        {
+                //        SmtpClient smtp = new System.Net.Mail.SmtpClient();
+                //        smtp.Host = "192.168.2.13";
+                //        smtp.UseDefaultCredentials = true;
 
-                            ExportExcelModel excel = new ExportExcelModel();
-                            if (dr["EMAIL"].ToString() != "")
-                            {
-                                excel.MAIL = dr["EMAIL"].ToString().Replace(",", "").Replace("İ", "i");
-                                list.Add(excel);
-                            }
 
-                        }
-                        con.Close();
+                //        smtp.Send(mail);
+
+                //    }
+
+
+                //}
+                //else if (currentTime.Hour == 11 && currentTime.Minute == 30 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
+                //{
+                //    OleDbConnection con;
+                //    OleDbCommand cmd;
+                //    OleDbDataReader dr;
+                //    List<ExportExcelModel> list = new List<ExportExcelModel>();
+                //    try
+                //    {
+                //        con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\192.168.2.3\ortak\YENİ Export-Ortak\EXPORT_STOCK_MAIL_LIST.xlsx; Extended Properties='Excel 12.0 xml;HDR=YES;READONLY=TRUE'");
+
+                //        cmd = new OleDbCommand("Select * FROM [Sayfa1$A1:B]", con);
+                //        con.Open();
+                //        dr = cmd.ExecuteReader();
+
+                //        while (dr.Read())
+                //        {
+                //            ExportExcelModel excel = new ExportExcelModel();
+                //            if (dr["email"].ToString() != "")
+                //            {
+                //                excel.MAIL = dr["email"].ToString();
+                //                list.Add(excel);
+                //            }
+                //        }
+                //        con.Close();
+                //        SENDMAIL(list, "yabanci");
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        MailMessage mail1 = new MailMessage();
+                //        mail1.From = new MailAddress("sistem@efecegalvaniz.com");
+                //        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
+                //        smtp1.Host = "192.168.2.13";
+                //        smtp1.UseDefaultCredentials = true;
+                //        mail1.IsBodyHtml = true;
+                //        mail1.Subject = "EFECE STOCK LIST";
+                //        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                //        mail1.Body = e.Message;
+                //        smtp1.Send(mail1);
+                //    }
+
+                //}
+                //else if (currentTime.Hour == 10 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
+                //{
+
+                //    OleDbConnection con;
+                //    OleDbCommand cmd;
+                //    OleDbDataReader dr;
+                //    List<ExportExcelModel> list = new List<ExportExcelModel>();
+                //    try
+                //    {
+                //        con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\192.168.2.3\ortak\SATIS\STOK_MAILING_LISTESI.xlsx; Extended Properties='Excel 12.0 xml;HDR=YES;READONLY=TRUE'");
+
+                //        cmd = new OleDbCommand("Select * FROM [Sayfa1$A1:B]", con);
+                //        con.Open();
+                //        dr = cmd.ExecuteReader();
+
+                //        while (dr.Read())
+                //        {
+
+                //            ExportExcelModel excel = new ExportExcelModel();
+                //            if (dr["EMAIL"].ToString() != "")
+                //            {
+                //                excel.MAIL = dr["EMAIL"].ToString().Replace(",", "").Replace("İ", "i");
+                //                list.Add(excel);
+                //            }
+
+                //        }
+                //        con.Close();
                         
-                        SENDMAIL(list, "Yerli");
-                    }
-                    catch (Exception e)
-                    {
-                        MailMessage mail1 = new MailMessage();
-                        mail1.From = new MailAddress("info@efecegalvaniz.com");
-                        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
-                        smtp1.Host = "192.168.2.13";
-                        smtp1.UseDefaultCredentials = true;
-                        mail1.IsBodyHtml = true;
-                        mail1.Subject = "EFECE STOK LİSTE";
-                        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
-                        mail1.Body = e.Message;
-                        smtp1.Send(mail1);
-                    }
+                //        SENDMAIL(list, "Yerli");
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        MailMessage mail1 = new MailMessage();
+                //        mail1.From = new MailAddress("info@efecegalvaniz.com");
+                //        SmtpClient smtp1 = new System.Net.Mail.SmtpClient();
+                //        smtp1.Host = "192.168.2.13";
+                //        smtp1.UseDefaultCredentials = true;
+                //        mail1.IsBodyHtml = true;
+                //        mail1.Subject = "EFECE STOK LİSTE";
+                //        mail1.Bcc.Add("surecgelistirme@efecegalvaniz.com");
+                //        mail1.Body = e.Message;
+                //        smtp1.Send(mail1);
+                //    }
 
-                }
-                else if (currentTime.Hour == 19 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday)
-                {
-                    Singleton fromsingleton = Singleton.GetInstance();
-                    fromsingleton.StokBakiye(currentTime, _configuration);
-                }
-               else if(currentTime.Hour == 7 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
-                {
-                    Singleton fromsingleton = Singleton.GetInstance();
-                    fromsingleton.AcikMsip(currentTime, _configuration);
-                }
+                //}
+                //else if (currentTime.Hour == 19 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek != DayOfWeek.Sunday && currentTime.DayOfWeek != DayOfWeek.Saturday)
+                //{
+                //    Singleton fromsingleton = Singleton.GetInstance();
+                //    fromsingleton.StokBakiye(currentTime, _configuration);
+                //}
+                //else if(currentTime.Hour == 7 && currentTime.Minute == 0 && currentTime.Second == 0 && currentTime.Millisecond == 0 && currentTime.DayOfWeek == DayOfWeek.Monday)
+                //{
+                //    Singleton fromsingleton = Singleton.GetInstance();
+                //    fromsingleton.AcikMsip(currentTime, _configuration);
+                //}
                
 
 
